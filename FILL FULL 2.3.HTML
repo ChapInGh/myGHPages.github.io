@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILL FULL</title>
+    <style>
+        html,body{
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        div#myBody{
+            height: 100%;
+            width: 100%;
+            background-color: #393733;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        /* 希望用于修改宽度 */
+        .flexBas{
+            flex-basis: 10%;
+        }
+        div.unit{
+            flex-basis: 10%;
+            border:1px solid rgb(43, 162, 214);
+            box-sizing: border-box;
+            background-color: bisque;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 3s;
+        }
+        div.choosed{
+            opacity:60%;
+            box-shadow: 10px 10px 10px black;
+        }
+        div#banner{
+            position: absolute;
+            /* float: left; */
+            top: 40%;    
+            height: 20%;
+            width: 100%;
+            background: gray;
+            opacity: .8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: white;
+            visibility:hidden;
+            transition: opacity 1s;
+        }
+    </style>
+</head>
+<body>
+    <div id="myBody">
+
+    </div>
+    <div id="banner">
+        第一关
+    </div>
+    <script>
+		let level = 2;
+		let title = "FILL FULL",msg;
+		let total=0,score=0,round=0;
+        let dimension = 10;
+        let items = [];
+        let colors = ["#96c24e","#fbda41","#f8df72","#867018","#f7e8aa","#fa983a","#b2cf87",
+        "#d85916","#f2481b","#6e8b74","#82ccdd"];
+        let opeFlag = 0,menuFlag = 0,strenFlag = 0;
+        let row1,column1,index1;
+        let myBody = document.querySelector("div#myBody");
+        let divItems = myBody.querySelector(".unit");
+        let divBanner = document.querySelector("#banner");
+
+        function ShowBanner(){
+            divBanner.innerHTML = `第 ${level-1} 关 ： 连 ${level+1} 消 ${strenFlag == 1?"增 强":""}`;
+            divBanner.style.visibility = "visible";
+            divBanner.style.opacity = .8;
+            setTimeout(()=>{
+                divBanner.style.visibility = "hidden";
+                divBanner.style.opacity = 0;
+            },1500);
+        }
+		function ShowMsg(){
+			msg = `${title} 连${level+1}消${strenFlag == 1?"*":""} ⚪：${score}+${round}`;
+            document.title = msg;
+		}
+		function Success(renew){
+            
+			if(score + round == total||renew){
+                for(let i=0;i<divItems.length;i++){
+                    divItems[i].style.opacity = 0.3;
+                }
+                setTimeout(() => {
+                    if(!renew){
+                        console.log(renew);
+                        score += round;
+                        if(strenFlag){
+                            strenFlag = 0;
+                            level ++;
+                        }else{
+                            strenFlag = 1;
+                        }
+                        confirm(`恭喜过关！！！\n分数：${score}\n下一关：连${level+1}消${strenFlag == 1?" 增强":""}`);
+                        ShowBanner();
+                    }
+                    items = [];
+                    CreateItems(dimension);
+                    if(strenFlag){
+                        let i = 5;
+                        while(i--){
+                            let ran = Math.floor(Math.random()*100);
+                            divItems[ran].style.backgroundColor = "black";
+                            Processor(ran,Infinity);
+                        }
+                    }
+                    round = 0;
+                }, 3000);
+			}
+		}
+		function Checker(myparam1,myparam,offset,mul){
+			let i=1;
+			if((myparam - myparam1)*offset>=level){
+				// console.log((myparam - myparam1)*offset);
+				while(i<=level){
+					if(!(!items[index1+offset*mul*i].activated && items[index1+offset*mul*i].number <= items[index1].number)){
+						return false;
+					}
+					i++;
+				}
+				return true;
+			}
+			return false;
+		}
+        function Processor(index,num){
+            if(!items[index].activated && items[index].number<=num){
+                items[index].activated = 1;
+				round += items[index].number;
+                divItems[index].innerHTML = "";
+                divItems[index].style.backgroundColor = colors[num];
+                return true;
+            }
+            return false;
+        }
+        function Event(){
+            let row = this.getAttribute("row")*1.0,
+            column = this.getAttribute("column")*1.0;
+            let index = (row-1)*10+column-1;
+            if(!items[index].activated){
+                if(index == index1){
+                    menuFlag++;
+                    if(menuFlag == 2){
+                        menuFlag = 0;
+                        if(confirm(`重玩将失去 ⚪：${round}`)){
+                            Success(1);
+                            ShowMsg();
+                        }
+                    }
+                }else
+                    menuFlag = 0;
+                if(!opeFlag){
+                    opeFlag = 1;
+                    row1 = row;
+                    column1 = column;
+                    index1 = index;
+                    divItems[index].classList.add("choosed");
+                }else{
+                    opeFlag = 0;
+                    let offset;
+                    let num = items[index1].number;
+                    if(row == row1 && column != column1){
+                        offset = column1<column?1:-1;
+                        divItems[index1].classList.remove("choosed");
+                        if(Checker(column1,column,offset,1))
+                            while(column1!=column+offset && !items[index1].activated){
+                                if(!Processor(index1,num)){
+                                        break;
+                                }
+                                index1 += offset;
+                                column1 += offset;
+                            }
+                    }else if(column == column1 && row != row1 ){
+                        offset = row1<row?1:-1;
+                        divItems[index1].classList.remove("choosed");
+                        if(Checker(row1,row,offset,10))
+							while(row1 != row + offset && !items[index1].activated){
+								if(!Processor(index1,num)){
+									break;
+								}
+								index1 += offset*10;
+								row1 += offset;
+							}
+                    }else{                        
+                        opeFlag = 1;
+                        divItems[index1].classList.remove("choosed");
+                        divItems[index].classList.add("choosed");
+                        row1 = row;
+                        column1 = column;
+                        index1 = index;
+                    }
+					Success();
+                    ShowMsg();
+                }
+            }
+        }
+        function CreateItems(num){
+            let i,j;
+			//divItems = myBody.querySelector(".unit");
+			let div;
+			if(divItems != null)
+				myBody.innerHTML = "";
+			divItems = [];
+            for(i=1;i<=num;i++){
+                for(j=1;j<=10;j++){
+                    let ran = Math.floor(Math.random()*11);
+					total += ran;
+                    items.push({number:ran,activated:0});
+                    div = document.createElement("div");
+                    div.className = "unit";
+                    div.setAttribute("row",i);
+                    div.setAttribute("column",j);
+                    div.innerHTML = ran;
+                    div.onclick = Event.bind(div);
+                    myBody.appendChild(div);
+					divItems.push(div);
+                }
+            }
+			Dry(num);
+            ShowBanner();
+        }
+        function Dry(num){
+            let i,j,index;
+            let div;
+            let divItems = myBody.getElementsByClassName("unit");
+            for(i=1;i<=num;i++){
+                for(j=1;j<=10;j++){
+                    index = (i-1)*10+j-1;
+                    div = divItems[index];
+                    div.style.backgroundColor = colors[div.innerHTML*1.0];
+                }
+            }
+        }
+        CreateItems(dimension);
+    </script>
+</body>
+</html>
