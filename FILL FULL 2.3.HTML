@@ -80,6 +80,12 @@
         let divItems = myBody.querySelector(".unit");
         let divBanner = document.querySelector("#banner");
         let starts = [-1,-1,-1,-1];
+        let maxOpacity = 1;
+        function DarkMode(){
+            let time = new Date();
+            if(time.getHours()<=5 || time.getHours()>=22)
+                maxOpacity= 0.6;
+        }
         function Swap(index){
             let store = items[index].number;
             divItems[index].style.transition = ".2s"
@@ -98,8 +104,8 @@
                 store = divItems[index1].style.backgroundColor;
                 Dry(dimension,index1,divItems[index].style.backgroundColor);
                 Dry(dimension,index,store);
-                divItems[index].style.opacity = 1;
-                divItems[index1].style.opacity = 1;
+                divItems[index].style.opacity = maxOpacity;
+                divItems[index1].style.opacity = maxOpacity;
                 divItems[index].style.transition = "opacity 3s"
                 divItems[index1].style.transition = "opacity 3s"
             }, 200);
@@ -109,7 +115,7 @@
         function ShowBanner(){
             divBanner.innerHTML = `第 ${level-1} 关 ： 连 ${level+1} 消 ${strenFlag == 1?"增 强":""}`;
             divBanner.style.visibility = "visible";
-            divBanner.style.opacity = .8;
+            divBanner.style.opacity = maxOpacity - 0.2;
             setTimeout(()=>{
                 divBanner.style.visibility = "hidden";
                 divBanner.style.opacity = 0;
@@ -287,6 +293,11 @@
 					divItems.push(div);
                 }
             }
+            //设置透明度
+            for(let i=0;i<divItems.length;i++){
+                console.log(maxOpacity);
+                divItems[i].style.opacity = maxOpacity;
+            }
 			Dry(num);
             ShowBanner();
         }
@@ -311,6 +322,7 @@
                 }
             }
         }
+        DarkMode();
         CreateItems(dimension);
     </script>
 </body>
