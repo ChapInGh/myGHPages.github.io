@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        div#container{
+            display: flex; 
+            flex-direction: column; 
+            height: 100%;
+            width: 100%;
+
+        }
+        div#head{
+            flex:1;
+            display: flex; 
+            flex-direction: row; 
+            background-color: #f9d770;
+			position:sticky;
+			top:0;
+
+        }
+        div#head > div{
+            display: flex;
+            flex-direction: column; 
+        }
+        div#head div:nth-child(1){
+			flex : 1;
+            margin-top: 3px;
+            margin-left: 5px;
+        }
+        div#head div:nth-child(2){
+			flex : 2;
+            margin-top: 3px;
+            margin-left: 5px;
+        }
+        div#head div:nth-child(3){
+			flex : 1.5;
+            margin-top: 3px;
+            margin-left: 5px;
+        }
+        div#body{
+            flex: 7;
+            background-color: #fa7e23;
+        }
+        div#tail{            
+            flex: 1;
+            display: flex;
+            background-color: #f9d770;
+        }
+        div#tail div{
+            padding: 10px 5px 10px 5px;
+        }
+        div#tail div.left,
+        div#tail div.right{
+            width: fit-content;
+            min-width: 100px;
+        }
+        div#tail div.left button{
+            margin: 10px 0;
+        }
+        div#tail div.middle{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #2d0c13;
+            border-right: 1px solid  #2d0c13;
+        }
+        div#tail div.middle div{
+            flex: 1;
+            width: 100%;
+            display: flex;
+            direction: row;
+            justify-content: center;
+        }
+        button{
+            height: 2em;
+        }
+		div#tail div.middle div button{
+            margin: 0 10px 10px 0;
+        }
+        div#tail div.right span {
+            color: #2d0c13;
+            font-size: medium;
+            font-weight: bold;
+        }
+		div#tail div.right div span.employee {
+            color: #cc163a;
+        }
+        div#body{
+            display: grid;
+            padding-left: 0%;
+            padding-right: 0%;
+            grid-template-columns: auto auto auto;
+            
+        }
+        div#body div span:nth-child(1){
+            color: #30161c;
+        }
+        div#body div{
+            display: grid;
+            align-items: center;
+            background-color: #d85916;
+            border: 1px solid #322f3b;
+        }
+        div#body div span{
+            text-align:center
+        }
+        #GameStore{
+            position: absolute;
+            top: -100px;
+        }
+        /* SeedSelect */
+        div#seedContainer,div#employeeContainer{
+            /* overflow: scroll; */
+            float: right;
+            position: relative;
+            left: -27%;
+            top: -76%;
+            width: 42%;
+            min-height: 30%;
+            max-height: fit-content;
+            padding: 10px;
+            background-color: #68b88e;
+            border-radius: 2px;
+            box-shadow: 0 0 15px #96c24e;
+        }
+        button{
+            border-radius: 3px;
+            border: #2d0c13 solid 1px;
+        }
+        div#tail div.left button{
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+    <title>我的农场</title>
+</head>
+<body>
+    <input type="text" id="GameStore">
+    <div id="container">
+        <div id="head">
+            <div>
+                <div class="nickName"><span></span></div>
+                <div class="grade">LV：<span></span></div>
+            </div>
+            <div>
+                <div class="startTime">第&nbsp<span></span></div>
+                <div class="skillValue">EXP：<span></span></div>
+            </div>
+            <div>
+                <div class="weather"><span></span></div>
+				<!--<div class="weather">天气：<span></span></div> Test-->
+                <div class="money">$：<span></span></div>
+            </div>
+
+            
+        </div>
+        <div id="body">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="tail">
+            <div class="left">
+                <button onclick="Save();">保存游戏</button>
+				<button id="EmployeeFunc" onclick="SelectEmployee(this);">雇佣工人</button>
+            </div>
+            <div class="middle">
+                <div><button onclick="Reclaim(this);">开垦土地</button>
+                    <button id="SaturateFunc" onclick="Saturate(this);">灌溉土地</button></div>
+                <div><button id="SelectFunc" onclick="SelectSeed(this);">选择种子</button>
+                    <button id="PlantFunc" onclick="Plant(this);">播撒种子</button></div>
+                <div><button onclick="Fertilize(this);">土地施肥</button>
+                    <button onclick="KillInsect(this);">消灭害虫</button></div>
+                <div><button onclick="Eliminate(this);">铲除植物</button>
+                    <button onclick="Harvest(this);">收获植物</button></div>
+            </div>
+            <div class="right">
+				<span></span>
+				<div>
+					<span class="employee"></span>
+				</div>
+			</div>
+        </div>
+    </div>
+    <div id="seedContainer" hidden>
+        <select name="Seed" id="Seed"  onchange="SelectSeed(window.SelectFunc);">
+            <option value="-1">请选择</option>
+        </select>
+        <hr>
+        <span id="SeedIntroduce">请选择种子后再确定</span>
+        <hr>
+        <button onclick="(window.seedContainer.hidden = true,Plant(window.PlantFunc));">确定</button>
+    </div>
+	<div id="employeeContainer" hidden>
+        <select name="Employee" id="Employee"  onchange="SelectEmployee(window.EmployeeFunc);">
+            <option value="-1">不雇佣</option>
+        </select>
+        <hr>
+        <span id="employeeIntroduce">不雇佣工人</span>
+        <hr>
+        <button onclick="(SetEmploy());">确定</button>
+    </div>
+    <script>
+	function GetCheckingCode(SavedArr){
+    let sum=0,code=90;
+    let arr = SavedArr.join("").replaceAll('#',',').split(',');
+    for(let i=1;i<arr.length-1;i++){
+        sum += arr[i]*1;
+    }
+    do{
+        code += sum%10;
+    }while((sum/=10) > 9);
+    code += sum;
+    return Math.floor((code/7)*10e5);
+}
+function CheckEffectiveness(SavedArr,code){
+    if(code == GetCheckingCode(SavedArr))
+         return true;
+    return false;
+}
+function SimplifySkillValue(currentGradeSkill,nextGradeSkill){
+	if(nextGradeSkill>=1000000000){
+		currentGradeSkill = (currentGradeSkill/1000000000 + '').substring(0,5);
+		nextGradeSkill = (nextGradeSkill/1000000000 + '').substring(0,5) + 'B';
+	}else if(nextGradeSkill>=1000000){
+		currentGradeSkill = (currentGradeSkill/1000000 + '').substring(0,5);
+        nextGradeSkill = (nextGradeSkill/1000000 + '').substring(0,5) + 'M';
+    }else if(nextGradeSkill>=10000){
+		currentGradeSkill = (currentGradeSkill/10000 + '').substring(0,5);
+        nextGradeSkill = (nextGradeSkill/10000 + '').substring(0,5) + 'W';
+    }
+	return [currentGradeSkill,nextGradeSkill];
+}
+function SimplifyMoney(money){
+	if(money>=10000000000){
+		money = (money/10000000000 + '').substring(0,6) + '百亿';
+	}else if(money>=100000000){
+		money = (money/100000000 + '').substring(0,6) + '亿';
+	}else if(money>=1000000){
+		money = (money/1000000 + '').substring(0,6) + '百万';
+	}else if(money>=10000){
+		money = (money/10000 + '').substring(0,6) + '万';
+	}
+	return money;
+}
+let initForSoil = [{state:0,planted:-1,plantedTime : null,drought : 1,grade:1,price:100,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},{state:0,planted:-1,plantedTime : null,drought : 1,grade:3,price:500,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},{state:0,planted:-1,plantedTime : null,drought : 1,grade:8,price:2000,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},{state:0,planted:-1,plantedTime : null,drought : 1,grade:15,price:10000,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},
+    {state:0,planted:-1,plantedTime : null,drought : 1,grade:25,price:30000,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},{state:0,planted:-1,plantedTime : null,drought : 1,grade:35,price:50000,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},{state:0,planted:-1,plantedTime : null,drought : 1,grade:45,price:100000,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},{state:0,planted:-1,plantedTime : null,drought : 1,grade:55,price:200000,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},{state:0,planted:-1,plantedTime : null,drought : 1,grade:65,price:500000,reclaimTime:null,harvestedTimes:0,sick:0,eat:0,seeding:0,mature:0,dying:0},];
+let initForCrop = [{state:1,cropName:"小麦",grade:1,seedPrice:30,sellPrice:200,skillValue:100,
+    matureTime:5,maxHarvestTimes : 1},
+    {state:0,cropName:"大豆",grade:3,seedPrice:50,sellPrice:400,skillValue:150,
+    matureTime:10,maxHarvestTimes : 2},
+    {state:0,cropName:"玉米",grade:10,seedPrice:200,sellPrice:1500,skillValue:300,
+    matureTime:30,maxHarvestTimes : 3},
+    {state:0,cropName:"小草兰",grade:30,seedPrice:350,sellPrice:3000,skillValue:500,
+    matureTime:60,maxHarvestTimes : 3},
+    {state:0,cropName:"三色堇",grade:45,seedPrice:700,sellPrice:4500,skillValue:700,
+    matureTime:60,maxHarvestTimes : 5},
+    {state:0,cropName:"昙花",grade:58,seedPrice:900,sellPrice:6000,skillValue:1000,
+    matureTime:60,maxHarvestTimes : 5},
+    {state:0,cropName:"南岭荛花",grade:70,seedPrice:1400,sellPrice:7000,skillValue:1500,
+    matureTime:180,maxHarvestTimes : 5},
+    {state:0,cropName:"金盏银盘",grade:85,seedPrice:2000,sellPrice:8500,skillValue:2000,
+    matureTime:200,maxHarvestTimes : 5},
+    {state:0,cropName:"冬虫夏草",grade:120,seedPrice:5000,sellPrice:50000,skillValue:3000,
+    matureTime:210,maxHarvestTimes : 5}
+    ];
+	let initforEmployee = [{state:0,seedNum:-1,type:"资产工",moneyBuff:1,skillBuff:0,grade:10,price:1000,moneyLimit:1200,activatedTime:null},
+                    {state:0,seedNum:-1,type:"技巧工",moneyBuff:0,skillBuff:1,grade:15,price:2000,moneyLimit:2400,activatedTime:null},
+                    {state:0,seedNum:-1,type:"全能工",moneyBuff:1,skillBuff:1,grade:70,price:3000,moneyLimit:3600,activatedTime:null}];
+
+let initForPlayer = { nickName:"nickName",grade : 1,skillValue : 0,startTime : 0,money:1000}
+
+let intervalManager = 0;
+let weatherArr = ['晴天','多云','阴天',['小雨','中雨','大雨','暴雨','雷阵雨'],['雨夹雪','小雪','中雪','大雪','暴雪']]
+let weather;
+function WhatIsTheWeatherLike(){
+    let month = new Date().getMonth() + 1;
+    if(month > 1 && month < 11){//非冬季
+        let num  = Math.floor(Math.random() * 4);
+        if(num == 3)
+            weather = weatherArr[3][Math.floor(Math.random() * 5)];
+        else
+            weather = weatherArr[num];
+    }else
+        weather = weatherArr[4][Math.floor(Math.random() * 5)];
+}
+function Soil(soilObject) {
+    return {state : soilObject.state,
+            planted : soilObject.planted,
+            plantedTime : soilObject.plantedTime,
+            drought : soilObject.drought,
+            grade:soilObject.grade,
+            price:soilObject.price,
+            reclaimTime : soilObject.reclaimTime,
+            harvestedTimes : soilObject.harvestedTimes,
+            sick : soilObject.sick,
+            eat : soilObject.eat,
+            seeding : soilObject.seeding,
+            mature : soilObject.mature,
+            dying : soilObject.dying,
+
+            isSick: function (){return this.sick},
+            isEat: function (){return this.eat},
+            isMature: function (){return this.mature},
+            isDying: function (){return this.dying},
+            isSeeding : function (){ return crops[this.planted].matureTime * 0.2 < (Date.now()-this.plantedTime)/1000/60;},
+
+            isUnplanted: function(){return this.planted == -1},
+            isUnbroken: function (){return this.state == 0},
+            isThirsty: function (){return this.drought == 1},
+            isPlanted: function (){return this.planted >= 0},
+            isNormal:function (){return (!this.isUnbroken()&&!this.isThirsty()&&!this.isPlanted())},
+
+            inUnbroken:function (){this.state = 0},
+            inBroken:function (){this.state = 1;this.reclaimTime = Date.now();},
+            inUnplanted:function (){this.planted = -1},
+            inThirsty:function (){this.drought = 1},
+            inUnthirsty:function (){this.drought = 0},
+            inPlanted: function (num){this.planted = num;this.plantedTime = Date.now();} ,
+            inUnSick:function (){this.sick = 0},
+            inSick:function (){this.sick = 1},
+            inUnEat:function (){this.eat = 0} ,
+            inEat:function (){this.eat = 1} ,
+            inMature:function (){this.mature = 1},
+            inDying:function (){this.dying = 1}
+        }
+}
+function Crop (cropObject){ 
+    return {state : cropObject.state,//生病（需要施肥）：-2，生虫（需要打药）：-1，种子：0，幼苗：1，成熟：2，枯萎（需要铲除）：3
+                cropName:cropObject.cropName,
+                grade:cropObject.grade,
+                seedPrice:cropObject.seedPrice,
+                sellPrice:cropObject.sellPrice,
+                skillValue:cropObject.skillValue,
+                matureTime:cropObject.matureTime,
+                maxHarvestTimes : cropObject.maxHarvestTimes,
+
+                isSick: function (){return this.sick},
+                isEat: function (){return this.state},
+                isSeed: function (){return this.state == 0},
+                isSeeding: function (){return this.state == 1},
+                isMature: function (){return this.state == 2},
+                isDying: function (){return this.state == 3},
+                isNormal: function (){return !this.isSick() && !this.isEat()},
+                inSick:function (){this.sick = 1},
+                inEat:function (){this.eat = 1},
+                inSeed:function (){this.state = 0},
+                inSeeding:function (){this.state = 1},
+                inMature:function (){this.state = 2},
+                inDying:function (){this.state = 3}
+            }
+}
+function Player(playerObject){
+    return  {   nickName:playerObject.nickName,
+                grade : playerObject.grade,
+                skillValue : playerObject.skillValue,
+                startTime : playerObject.startTime,
+                money:playerObject.money
+            }
+}
+
+let soils = [];
+let crops = [];
+let employees = [];
+let player;
+let selectFlag = 0;
+let employeeFlagForIntvl = 1;
+
+
+
+function Msg(num,msg){
+    let body = document.querySelector("body div#body");
+    let divs = body.querySelectorAll("div");
+    let span;
+    span = document.createElement("span");
+    span.innerText = msg;
+    divs[num].appendChild(span);
+}
+
+function IntervalForThirsty(){
+    if(!this.isThirsty()&&Math.random()<0.4){
+        this.inThirsty();
+    }
+    displaySoils();
+}
+function IntervalForEat(){
+    if(this.isPlanted()&&this.isSeeding()&&!this.isEat()&&!this.isDying()&&Math.random()<0.4){
+        this.inEat();
+    }
+    displaySoils();
+}
+function IntervalForSick(){
+    if(this.isPlanted()&&!this.isSick()&&!this.isDying()&&Math.random()<0.4){
+        this.inSick();
+    }
+    displaySoils();
+}
+function StartInterval(){
+    let soil;
+    for(let i=intervalManager;i<soils.length;i++,intervalManager++){
+        if(!soils[i].isUnbroken()){
+            soil = soils[i];
+            setInterval(IntervalForThirsty.bind(soil),20000);
+            setInterval(IntervalForEat.bind(soil),20000);// 测试
+            setInterval(IntervalForSick.bind(soil),20000);
+        }else{
+            break;
+        }
+    }
+    if(employeeFlagForIntvl){
+        setInterval(Worker(), 20 * 1000);
+        employeeFlagForIntvl = 0;
+    }
+}
+function displaySoils(){
+    let body = document.querySelector("body div#body");
+    let divs = body.querySelectorAll("div");
+    let flag = 1;
+    for(let i=0;i<divs.length;i++){
+        divs[i].innerHTML = '';
+        if(soils[i].isUnbroken()){
+            if(soils[i].grade <= player.grade || flag)
+            {
+                if(soils[i].grade > player.grade)
+                    (flag = 0,Msg(i,`等级：${soils[i].grade} 价格：${soils[i].price}`));
+                else
+                    Msg(i,`可开垦(等级：${soils[i].grade} 价格：${soils[i].price})`);
+            }else
+                Msg(i,"未开垦");
+        }else{//    已开垦
+            if(soils[i].isPlanted()){// 已种植
+                let mature = crops[soils[i].planted].matureTime - (Date.now()-soils[i].plantedTime)/1000/60;
+                Msg(i,`种植：${crops[soils[i].planted].cropName}`);
+                if(!soils[i].isDying() && mature > 0)//TEXT 0->6
+                    Msg(i, `成熟：${Math.ceil(mature)}分钟 季:${soils[i].harvestedTimes+1}/${crops[soils[i].planted].maxHarvestTimes}`);
+                else if(soils[i].isDying()){
+                    Msg(i,`已枯萎`);
+                }else{
+                    soils[i].inMature();
+                    Msg(i, `已成熟 季:${soils[i].harvestedTimes+1}/${crops[soils[i].planted].maxHarvestTimes}`);
+                }
+                if(soils[i].isEat()){
+                    Msg(i,"有害虫");
+                }
+                if(soils[i].isSick()){
+                    Msg(i,"生病");
+                }
+                
+            }
+            if(soils[i].isNormal()){
+                Msg(i,"可种植");
+            }else if(soils[i].isThirsty()){
+                Msg(i,"干旱");
+            }
+        }
+    }
+}
+
+function displayPlayer(){
+    let head = document.querySelector("body div#head");
+    let nextGradeSkill = 100 +  Math.floor(Math.pow(player.grade*10,2));
+	let currentGradeSkill = player.skillValue;
+	let money = player.money;
+	
+	[currentGradeSkill,nextGradeSkill] = SimplifySkillValue(currentGradeSkill,nextGradeSkill);
+    // console.log(currentGradeSkill,nextGradeSkill);
+    
+    head.querySelector(".nickName span").innerText = player.nickName;
+    head.querySelector(".grade span").innerText = player.grade;
+    head.querySelector(".skillValue span").innerText = `${currentGradeSkill}/${nextGradeSkill}`;
+    head.querySelector(".money span").innerText = SimplifyMoney(money);
+    head.querySelector(".startTime span").innerText = Math.ceil((Date.now())/1000/86400 - Math.floor(player.startTime/1000/86400))+" 天";
+    //head.querySelector(".weather span").innerText = weather;
+}
+function InitGame(){
+    player = new Player(initForPlayer);
+    for(let i=0;i<initForSoil.length||i<initForCrop.length;i++){
+        if(i<initForSoil.length){
+            soils.push(new Soil(initForSoil[i]));
+        }
+        if(i<initForCrop.length){
+            crops.push(new Crop(initForCrop[i]));
+        }
+    }
+	for(let i=0;i<initforEmployee.length;i++){
+		employees.push(Employee(initforEmployee[i]));
+	}
+    GetSkillValue(0);
+    WhatIsTheWeatherLike();
+}
+function UpdateMoney(num){
+    player.money += num;
+    displayPlayer();
+}
+function GetSkillValue(num){
+    player.skillValue = player.skillValue + num;
+    while(player.skillValue >= 100 + Math.floor(Math.pow(player.grade*10,2))){
+        player.grade += 1;
+        for(let i=0;i<crops.length;i++){
+            if(crops[i].state == 0){
+                crops[i].state = player.grade >= crops[i].grade ? 1 : 0;
+            }
+        }
+        }
+    displayPlayer();
+}
+function RenewSoil(soil){
+    if(!soil.isDying()){
+        if(soil.harvestedTimes >= crops[soil.planted].maxHarvestTimes){
+            soil.seeding = 0;
+            soil.mature = 0;
+            soil.inDying();
+        }else{
+            soil.plantedTime = Date.now();
+            soil.mature = 0;
+        }
+
+    }else{
+        soil.plantedTime = null;
+        soil.planted = -1;
+        soil.harvestedTimes = 0;
+        soil.eat = 0;
+        soil.sick = 0;
+        soil.seeding = 0;
+        soil.mature = 0;
+        soil.dying = 0;
+    }
+    displaySoils();
+}
+function Save(){
+    let playerArr = Object.keys(player);
+    let soilsArr = Object.keys(soils[0]);
+    let copyTool = document.querySelector("#GameStore");
+    let savingStr = "";
+    let store,code;
+    //玩家信息
+    for(let i=0;i<playerArr.length;i++){
+        savingStr += player[playerArr[i]]+",";
+    }
+    store = savingStr.split("");
+    store[savingStr.length-1] = "#";
+    savingStr = store.join('');
+    // console.log("玩家信息："+savingStr);
+    
+    //土地信息
+    for(let i=0;i<soilsArr.length&&!isNaN(soils[0][soilsArr[i]]);i++){
+        // console.log(soilsArr[i]+":"+soils[0][soilsArr[i]]+"\n");
+        for(let j=0;j<soils.length;j++){
+            savingStr += (soils[j][soilsArr[i]]==null?0:soils[j][soilsArr[i]])+",";
+        }
+    }
+    store = savingStr.split("");
+    store[savingStr.length-1] = "#";
+    savingStr = store.join('');
+    //工人雇佣信息
+    for(let i=0;i<employees.length;i++){
+        savingStr += employees[i].state + ",";
+        savingStr += employees[i].seedNum + ",";
+        savingStr += (employees[i].activatedTime==null?0:employees[i].activatedTime) + ",";
+    }
+    store = savingStr.split("");
+    store[savingStr.length-1] = "#";
+    savingStr = store.join('');
+    // console.log("工人雇佣信息："+savingStr);
+    code = GetCheckingCode(store)+"^"+savingStr;
+    copyTool.value = code;
+    copyTool.select();
+    document.execCommand("copy");
+    alert("已复制，请自行粘贴保存");
+}
+function Read(str){
+    let code,arr;
+    let playerArr = Object.keys(player);
+    let soilsArr = Object.keys(soils[0]);
+    code = str.split('^')[0];
+    if(CheckEffectiveness(str.split('^')[1].split(),code)){
+        arr = str.split('^')[1].split('#')[0].split(',');
+        for(let i=0;i<playerArr.length;i++){
+            if(i>0){
+                player[playerArr[i]] = arr[i] * 1;
+            }else
+                player[playerArr[i]] = arr[i];
+        }
+        displayPlayer();
+        arr = str.split('^')[1].split('#')[1].split(',');
+        for(let i=0;i<soilsArr.length&&!isNaN(soils[0][soilsArr[i]]);i++){
+            for(let j=0;j<soils.length;j++){
+                soils[j][soilsArr[i]] = arr[i*soils.length+j] * 1;
+            }
+        }
+        displaySoils();
+        arr = str.split('^')[1].split('#')[2].split(',');
+        
+        if(arr[0] != ''){
+            for(let i=0;i<employees.length;i++){
+                employees[i].state = arr[i*employees.length + 0]*1;
+                employees[i].seedNum = arr[i*employees.length + 1]*1;
+                employees[i].activatedTime = arr[i*employees.length + 2]*1;
+                if(employees[i].state == 1)
+                    document.querySelector("#tail .right div span.employee").innerText = `${employees[i].type}\n(${crops[employees[i].seedNum].cropName})`;
+            }
+            // Worker();
+        }
+        
+    }else{
+        alert("存档信息无效");
+        StartGame();
+    }
+}
+
+function Reclaim(btn){//未开垦：0，未种植：0，干旱：1，已种植：2
+    let soilDivs = document.querySelectorAll("#body div");
+    let soil;
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    for(let i=0;i<soilDivs.length;i++){
+        soilDivs[i].onclick = ()=>{
+            if(soils[i].isUnbroken()&&soils[i].grade <= player.grade && soils[i].price <= player.money){
+                soil = soils[i];
+                soils[i].inBroken();
+                soils[i].inThirsty();
+                player.money -= soils[i].price;
+                Saturate(window.SaturateFunc);
+                StartInterval();
+            }else 
+                alert("不满足开垦条件");
+            displayPlayer();
+            displaySoils();
+        }
+    }
+}
+function Saturate(btn){
+    let soilDivs = document.querySelectorAll("#body div");
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    for(let i=0;i<soilDivs.length;i++){
+        soilDivs[i].onclick = ()=>{
+            if(!soils[i].isUnbroken() && soils[i].isThirsty()){
+                GetSkillValue(10);
+                soils[i].inUnthirsty();
+            }else 
+                alert("这块土地暂时不需要浇水哦");
+            displayPlayer();
+            displaySoils();
+        }
+    }
+}
+function SelectSeed(btn){
+    let select = document.querySelector("select#Seed");
+    let span = document.querySelector("span#SeedIntroduce");
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    document.querySelector("#seedContainer").hidden = false;
+    if(!selectFlag){
+        for(let i=0;i<initForCrop.length;i++){
+            if(i<initForCrop.length){
+                let option = document.createElement("option");
+                option.value = i;
+                option.innerText = crops[i].cropName;
+                select.appendChild(option);
+            }
+        }
+        selectFlag = 1;
+    }else{
+        if(select.value * 1 != -1){
+            let crop = crops[select.value * 1];
+            span.innerText = `名称\t:\t${crop.cropName}\n等级\t:\t${crop.grade}\n种子价格\t:\t${crop.seedPrice}\n预计货币收益\t:\t${crop.sellPrice}\n技巧收益\t:\t${crop.skillValue}\n成熟时间\t:\t${crop.matureTime}\n季数\t:\t${crop.maxHarvestTimes}`;
+        }
+        // else{//  自动选择最高等级植物
+		// 	let i=0
+		// 	for(;i<crops.length;i++){
+		// 		if(crops[i].grade > player.grade){
+		// 			break;
+		// 		}
+		// 	}
+		// 	select.value = i-1;
+		// 	SelectSeed(btn);
+		// }
+    }
+}
+function Plant(btn){
+    let select = document.querySelector("select#Seed");
+    let num = select.value * 1;
+    if(num == -1){
+        SelectSeed(window.SelectFunc);
+    }else{
+        let soilDivs = document.querySelectorAll("#body div");
+        document.querySelector("#tail .right span").innerText = `${btn.innerText}\n(${crops[num].cropName})`;
+        for(let i=0;i<soilDivs.length;i++){
+            soilDivs[i].onclick = ()=>{
+                if(soils[i].isNormal()){
+                    if(player.money >= crops[num].seedPrice && player.grade >= crops[num].grade){
+                        UpdateMoney(crops[num].seedPrice*-1);
+                        soils[i].inPlanted(num);
+                        GetSkillValue(10);
+                    }else
+                        alert("货币不足或等级不够");
+                }else 
+                    alert("这块土地还未开垦或不能种植");
+                displayPlayer();
+                displaySoils();
+            }
+        }
+    }
+}
+function Fertilize(btn){
+    let soilDivs = document.querySelectorAll("#body div");
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    for(let i=0;i<soilDivs.length;i++){
+        soilDivs[i].onclick = ()=>{
+            if(soils[i].isSick()){
+                GetSkillValue(10);
+                soils[i].inUnSick();
+            }else 
+                alert("这块土地暂时不需要施肥哦");
+            displayPlayer();
+            displaySoils();
+        }
+    }
+}
+function KillInsect(btn){
+    let soilDivs = document.querySelectorAll("#body div");
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    for(let i=0;i<soilDivs.length;i++){
+        soilDivs[i].onclick = ()=>{
+            if(soils[i].isEat()){
+                GetSkillValue(10);
+                soils[i].inUnEat();
+            }else 
+                alert("这块土地暂时不需要除虫哦");
+            displayPlayer();
+            displaySoils();
+        }
+    }
+}
+function Harvest(btn){
+    let soilDivs = document.querySelectorAll("#body div");
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    for(let i=0;i<soilDivs.length;i++){
+        soilDivs[i].onclick = ()=>{
+            if(soils[i].isMature()){
+                if(soils[i].isSick()||soils[i].isEat()){
+                    GetSkillValue(crops[soils[i].planted].skillValue*0.5);
+                    UpdateMoney(crops[soils[i].planted].sellPrice*0.5);
+                }
+                else{
+                    GetSkillValue(crops[soils[i].planted].skillValue);
+                    UpdateMoney(crops[soils[i].planted].sellPrice);
+                }
+                soils[i].harvestedTimes += 1;
+                RenewSoil(soils[i]);
+            }else 
+                alert("这块土地还不能收获");
+            displayPlayer();
+            displaySoils();
+        }
+    }
+}
+function Eliminate(btn){
+    let soilDivs = document.querySelectorAll("#body div");
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    for(let i=0;i<soilDivs.length;i++){
+        soilDivs[i].onclick = ()=>{
+            if(soils[i].isPlanted()){
+                if(soils[i].isDying()){
+                    GetSkillValue(10);
+                    RenewSoil(soils[i]);
+                }else {
+                    let flag = confirm(`是否铲除${crops[soils[i].planted].cropName}？`);
+                    if(flag == true){
+                        soils[i].inDying();
+                        RenewSoil(soils[i]);
+                    }
+                }       
+            }else{
+                alert("这块土地上没有植物");
+            }       
+            displayPlayer();
+            displaySoils();
+        }
+    }
+}
+function StartGame(){
+    let str = window.prompt("欢迎回来，请输入存档信息：");
+    InitGame();
+    if(str == null || str == ''){
+        player.nickName = window.prompt("创建人物昵称：");
+        if(player.nickName == null || player.nickName == ''){
+            StartGame();
+            return 0;
+        }
+        player.startTime = Date.now();
+        alert(`游戏昵称设置为：${player.nickName}`);
+        displayPlayer();
+    }else{
+		if(str.split('^').length == 1){
+			player.nickName = str;
+			player.startTime = Date.now();
+			alert(`游戏昵称设置为：${player.nickName}`);
+			displayPlayer();
+		}else
+			Read(str);
+    }
+    StartInterval();
+    displaySoils();
+}
+//	Employee System
+
+
+function RenewSoilForWorker(soil){
+    if(!soil.isDying()){
+        if(soil.harvestedTimes >= crops[soil.planted].maxHarvestTimes){
+            soil.seeding = 0;
+            soil.mature = 0;
+            soil.inDying();
+        }else{
+            soil.mature = 0;
+        }
+
+    }else{
+        soil.plantedTime = null;
+        soil.planted = -1;
+        soil.harvestedTimes = 0;
+        soil.eat = 0;
+        soil.sick = 0;
+        soil.seeding = 0;
+        soil.mature = 0;
+        soil.dying = 0;
+    }
+}
+function Employee(employeeObject){
+    return  {   state:employeeObject.state,
+                seedNum:employeeObject.seedNum,
+                type:employeeObject.type,
+                moneyBuff:employeeObject.moneyBuff,
+                skillBuff:employeeObject.skillBuff,
+                grade:employeeObject.grade,
+                price:employeeObject.price,
+                moneyLimit:employeeObject.moneyLimit,
+                activatedTime:employeeObject.activatedTime
+            };
+}
+function SetEmploy(){
+    let select = document.querySelector("select#Seed");
+    let index = document.querySelector("select#Employee").value * 1;
+    let soilNum=0;
+	
+    for(let i=0;i<soils.length;i++){
+        if(!soils[i].isUnbroken()){
+            soilNum++;
+        }
+    }
+    for(let i=0;i<employees.length;i++){
+        employees[i].state = 0;
+    }
+    if(index == -1){
+        window.employeeContainer.hidden = true;
+        document.querySelector("#tail .right span.employee").innerText = '';
+        return 0;
+    }
+    if(select.value == -1){
+        SelectSeed(window.SelectFunc);
+    }else{
+        // if(!(player.money >= crops[select.value].seedPrice && player.grade >= crops[select.value].grade)||player.money < employees[index].moneyLimit||player.grade < employees[index].grade){
+        //     alert("您不满足雇佣要求");
+        // }
+		employees[index].seedNum = select.value * 1;
+        if(!(player.money >= crops[select.value].seedPrice && player.grade >= crops[select.value].grade)){
+            alert("无法播种当前种子");
+			SelectSeed(window.SelectFunc);
+        }else if(player.grade < employees[index].grade){
+            alert(`等级不足，无法雇佣当前工人\n需要：${employees[index].grade}`);
+        }else if(player.money < employees[index].moneyLimit * soilNum){
+            alert(`货币不足，无法雇佣当前工人\n需要：${(employees[index].moneyLimit + crops[employees[index].seedNum].seedPrice) * soilNum}`);
+        }else{
+            window.employeeContainer.hidden = true;
+            employees[index].state = 1;
+            employees[index].activatedTime = Date.now();
+            document.querySelector("#tail .right div span.employee").innerText = `${employees[index].type}\n(${crops[employees[index].seedNum].cropName})`;
+        }
+    }
+    
+}
+function Worker(){
+    let worker = null;
+    let money=0,skill=0,hour=0;
+    let soilNum=0;
+    let crop;
+    for(let i=0;i<employees.length;i++){
+        if(employees[i].state == 1){
+            worker = employees[i];
+            crop = crops[worker.seedNum];
+            break;
+        }
+    }
+    for(let i=0;i<soils.length;i++){
+        if(!soils[i].isUnbroken()){
+            soilNum++;
+        }
+    }
+    if(worker != null){//activatedTime  seedNum     state
+        for(;Date.now() - worker.activatedTime >= 1000*3600 && player.money*1+ (money - hour * worker.price * soilNum)>= (worker.moneyLimit + crops[worker.seedNum].seedPrice) * soilNum;worker.activatedTime-= -1*(1000*3600)){
+            hour += 1;
+            for(let j=0,soil;j<soils.length;j++){
+                soil=soils[j];
+                if(!soil.isUnbroken()){
+					if(soil.isDying()){
+							RenewSoilForWorker(soil);
+					}
+                    if(soil.isUnplanted()){
+                        soil.inPlanted(worker.seedNum);
+                        soil.plantedTime = worker.activatedTime + 1000 * 3600;
+                        UpdateMoney(crops[soil.planted].seedPrice*-1);
+                    }else {
+                        if(crops[soil.planted].matureTime - (worker.activatedTime + 1000 * 3600 - soil.plantedTime)/1000/60 <= 0)
+                            soil.inMature();
+                        if(soil.isMature()){
+                            skill += crops[soil.planted].skillValue * worker.skillBuff;
+                            money += crops[soil.planted].sellPrice * worker.moneyBuff;
+                            soil.harvestedTimes += 1;
+                            RenewSoilForWorker(soil);
+							soil.plantedTime = worker.activatedTime * 1 + 1000 * 3600;
+                            if(soil.isDying()){
+                                RenewSoilForWorker(soil);
+                                soil.inPlanted(worker.seedNum);
+                                soil.plantedTime = worker.activatedTime + 1000 * 3600;
+                                UpdateMoney(crops[soil.planted].seedPrice*-1);
+                            }
+                        }
+                    }
+                }
+            }
+            // money += crop.sellPrice * soilNum * worker.moneyBuff;
+            // skill += crop.skillValue * soilNum * worker.skillBuff;
+        }
+        UpdateMoney(money - hour * worker.price * soilNum);
+        GetSkillValue(skill);
+        displayPlayer();
+        displaySoils();
+        alert(`${worker.type} 已为您工作: ${hour}小时 (${(hour/24).toFixed(2)}天)\n为您带来货币收益： ${SimplifyMoney(money)}$\n核发工资： ${hour}*${worker.price}*${soilNum}=${SimplifyMoney(hour * worker.price * soilNum)}$\n技巧收益： ${SimplifySkillValue(skill,skill)[1]}`);
+    }
+    
+}
+
+/**
+ * 激活状态
+ * 类型
+ * 等级
+ * 价格
+ * 货币收益
+ * 技巧收益
+ * 激活时间
+ */
+
+let selectFlagForEmp = 0;
+
+function SelectEmployee(btn){
+    let select = document.querySelector("select#Employee");
+    let span = document.querySelector("span#employeeIntroduce");
+    document.querySelector("#tail .right span").innerText = btn.innerText;
+    document.querySelector("#employeeContainer").hidden = false;
+    if(!selectFlagForEmp){
+        for(let i=0;i<initforEmployee.length;i++){
+            if(i<initforEmployee.length){
+                let option = document.createElement("option");
+                option.value = i;
+                option.innerText = employees[i].type;
+                select.appendChild(option);
+            }
+        }
+        selectFlagForEmp = 1;
+    }else{
+        if(select.value * 1 != -1){
+            let employee = employees[select.value * 1];
+            span.innerText = `类型\t:\t${employee.type}\n等级\t:\t${employee.grade}\n每小时工资\t:\t${employee.price}\n预计货币收益\t:\t${employee.moneyBuff*100+'%'}\n技巧收益\t:\t${employee.skillBuff*100+"%"}\n说明\t:\t工人会自动播撒并收获当前选择的种子，具体工资是每小时工资 x 已开垦块数，工人每一小时管理土地一次`;
+        }else{
+            span.innerText = `自力更生、丰衣足食`;
+        }
+    }
+}
+// setInterval(Worker(), 20 * 1000);
+
+        StartGame();
+    </script>
+	<script>
+	let realWeather = '';
+	function GetRealWeather(data){
+		let arr = data.weather;
+		realWeather = data.city+"："+arr[0].weather;
+		if(realWeather.length>7){
+			realWeather = realWeather.split('转')[0];
+		}
+		document.querySelector("#head > div:nth-child(3) > div.weather > span").innerText = realWeather;
+	}
+        window.onload = function(){
+            let oScript = document.createElement('script');
+            // https://query.asilu.com/weather/baidu/?city=${oCity.value}&callback=GetRealWeather
+            oScript.src = `https://query.asilu.com/weather/baidu/?city=&callback=GetRealWeather`;
+            oScript.hidden = true;
+            document.body.appendChild(oScript);
+        }
+    </script>
+    </body>
+</html>
