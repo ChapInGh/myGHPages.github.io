@@ -10,8 +10,8 @@
             width: 100%;
             height: 100%;
             background: black;
-            /* background-image: url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202010%2F02%2F20201002171419_emsTx.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1670863536&t=6b600c849a315df5f7d262611598c7aa");
-            background-size: 100% 100%; */
+             /* background-image : url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ffile.moyublog.com%2Fd%2Ffile%2F2020-12-14%2F633298418ca6c762e6efe7f1adf2c782.jpg&refer=http%3A%2F%2Ffile.moyublog.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1670864844&t=ac31f731117ddd485b17f5195d028180");
+             background-size: 100%; */
         }
         body{
             margin: 0;
@@ -22,15 +22,29 @@
             background-size: 100%;
         }
         #contain{
-            padding-top: 8%;
+            padding-top: 50px;
             padding-left: 5%;
+            /* padding-right: 5%; */
         }
         h1{
-            margin-bottom: 3%;
+            margin-bottom: 130px;
         }
         hr{
             width: 30%;
             margin-left:0;
+        }
+        #help{
+            margin-top: 60px;
+            background: rgba(116,117,155, .5);
+            padding: 10px;
+            width: 90%;
+            height: max-content;
+            white-space : pre-wrap;
+            line-height: 150%;
+            opacity: 0;
+        }
+        #help:hover{
+            opacity: 1;
         }
     </style>
 </head>
@@ -39,8 +53,22 @@
         <h1 id="tips"></h1>
     <a href="https://htmlpreview.github.io/?https://github.com/ChapInGh/myGHPages.github.io/blob/main/FILL%20FULL%202.3.HTML">FULL FILL</a>
     <hr>
-    <a href="https://htmlpreview.github.io/?https://github.com/ChapInGh/ChapInGh.github.io/blob/main/MyFarm.html">My Farm</a>
+    <a href="https://htmlpreview.github.io/?https://github.com/ChapInGh/myGHPages.github.io/blob/main/MyFarm.html">My Farm</a>
     <hr>
+    <pre id="help">
+FULL FILL
+目标:为全部色块着色。
+基本规则:每关随机生成一百个色块，每个色块上的标号即为其等级，等级高者可以覆盖其相邻未着色色块并进入着色状态。
+连 x 消:要求每次至少着色 x 个色块。
+x 星星:收集全部星星，立即获得一次交换任意两个色块的机会。
+        
+MyFarm
+目标:搞钱！搞钱！！还是搞钱！！！
+基本规则:开垦土地以及为土地浇水、施肥、杀虫等可以获得技巧以升级等级并解锁更多功能。
+输入存档:没有存档时，可以创建一个用户名。
+保存游戏:将会自动把游戏信息复制至剪贴板，下次启动时使用。
+部分浏览器不支持保存，烦请更换浏览器。
+    </pre>
     </div>
     <script>
         let time = new Date();
@@ -48,27 +76,26 @@
         if(time.getHours()<=3){
             msg = "夜深了，早点休息吧📕";
             document.body.style.opacity=.5;
-            // document.html.style.backgroudImage = `url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ffile.moyublog.com%2Fd%2Ffile%2F2020-12-14%2F633298418ca6c762e6efe7f1adf2c782.jpg&refer=http%3A%2F%2Ffile.moyublog.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1670864844&t=ac31f731117ddd485b17f5195d028180")`;
         }else if(time.getHours()<=5){
             msg = "凌晨！是醒得太早吗？";
             document.body.style.opacity=.5;
-            // document.html.style.backgroudImage = `url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ffile.moyublog.com%2Fd%2Ffile%2F2020-12-14%2F633298418ca6c762e6efe7f1adf2c782.jpg&refer=http%3A%2F%2Ffile.moyublog.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1670864844&t=ac31f731117ddd485b17f5195d028180")`;
         }else if(time.getHours()<=8){
             msg = "早上好！记得吃早饭";
         }else if(time.getHours()<=11){
-            msg = "中午吃什么好呢？";
+            msg = "午饭吃什么好呢？";
         }else if(time.getHours()<=13){
             msg = "午好！有午睡的习惯吗？";
         }else if(time.getHours()<=16){
-            msg = "下午好！晚上吃什么好呢？";
+            msg = "下午好！晚饭吃什么好呢？";
         }else if(time.getHours()<=18){
             msg = "干饭啦干饭啦！";
         }else if(time.getHours()<=21){
-            msg = "晚上好！有什么忘记做的吗？";
+            msg = "晚上好！今晚有月亮吗？";
         }else if(time.getHours()<=23){
             msg = "睡觉咯！";
         }
         window.tips.innerHTML = msg;
+        window.tips.innerHTML = "下午好！晚饭吃什么好呢？"
     </script>
 </body>
 </html>
