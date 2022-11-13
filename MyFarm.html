@@ -8,6 +8,7 @@
         html{
             width: 100%;
             height: 100%;
+            background: black;
         }
         body{
             margin: 0;
@@ -292,6 +293,13 @@ let initForPlayer = { nickName:"nickName",grade : 1,skillValue : 0,startTime : 0
 let intervalManager = 0;
 let weatherArr = ['晴天','多云','阴天',['小雨','中雨','大雨','暴雨','雷阵雨'],['雨夹雪','小雪','中雪','大雪','暴雪']]
 let weather;
+
+function DarkMode(){
+    let time = new Date();
+    if(time.getHours()<=5 || time.getHours()>=22)
+        document.body.style.opacity = 0.6;
+}
+
 function WhatIsTheWeatherLike(){
     let month = new Date().getMonth() + 1;
     if(month > 1 && month < 11){//非冬季
@@ -995,7 +1003,7 @@ function SelectEmployee(btn){
     }
 }
 // setInterval(Worker(), 20 * 1000);
-
+        DarkMode()
         StartGame();
     </script>
 	<script>
