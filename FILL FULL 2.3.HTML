@@ -66,9 +66,6 @@
     <div id="banner">
         第一关
     </div>
-    <audio id="gameAudio" src="./sailor.mp3" autoplay loop></audio>
-    <audio src="./star.mp3" muted></audio>
-    <audio src="./ka.mp3" muted></audio>
     <script>
 		let level = 2;
 		let title = "FILL FULL",msg;
@@ -84,15 +81,6 @@
         let divBanner = document.querySelector("#banner");
         let starts = [-1,-1,-1,-1];
         let maxOpacity = 1;
-
-        function Audio(){
-            let audios = ["sailor.mp3","ka.mp3","star.mp3"];
-            if(strenFlag == 1){
-                window.gameAudio.src =  audios[2];
-            }else{
-                window.gameAudio.src =  audios[(level-2)%3];
-            }
-        }
         function DarkMode(){
             let time = new Date();
             if(time.getHours()<=5 || time.getHours()>=22)
@@ -144,7 +132,7 @@
                 }
                 setTimeout(() => {
                     if(!renew){
-                        // console.log(renew);
+                        console.log(renew);
                         total += roundTotal;
                         score += round;
                         if(strenFlag){
@@ -305,7 +293,6 @@
 					divItems.push(div);
                 }
             }
-            Audio();
             //设置透明度
             for(let i=0;i<divItems.length;i++){
                 divItems[i].style.opacity = maxOpacity;
