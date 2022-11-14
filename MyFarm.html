@@ -19,7 +19,7 @@
         div#container{
             display: flex; 
             flex-direction: column; 
-            height: 100%;
+            height: 80%;
             width: 100%;
 
         }
@@ -57,7 +57,7 @@
             background-color: #fa7e23;
         }
         div#tail{         
-            flex: 1;
+            min-hegit : 20%;
             display: flex;
             background-color: #f9d770;
         }
@@ -180,6 +180,7 @@
             <div></div>
             <div></div>
         </div>
+      </div>
         <div id="tail">
             <div class="left">
                 <button onclick="Save();">保存游戏</button>
@@ -202,7 +203,7 @@
 				</div>
 			</div>
         </div>
-    </div>
+    
     <div id="seedContainer" hidden>
         <select name="Seed" id="Seed"  onchange="SelectSeed(window.SelectFunc);">
             <option value="-1">请选择</option>
