@@ -28,8 +28,10 @@
             display: flex; 
             flex-direction: row; 
             background-color: #f9d770;
-			position:sticky;
-			top:0;
+	    position:sticky;
+	    top:0;
+	    justify-content: space-between;
+            padding-bottom: 2px;
 
         }
         div#head > div{
@@ -295,6 +297,7 @@ let initForPlayer = { nickName:"nickName",grade : 1,skillValue : 0,startTime : 0
 let intervalManager = 0;
 let weatherArr = ['晴天','多云','阴天',['小雨','中雨','大雨','暴雨','雷阵雨'],['雨夹雪','小雪','中雪','大雪','暴雪']]
 let weather;
+let realLoc = "";
 
 function DarkMode(){
     let time = new Date();
@@ -1018,13 +1021,21 @@ function SelectEmployee(btn){
 		}
 		document.querySelector("#head > div:nth-child(3) > div.weather > span").innerText = realWeather;
 	}
-        window.onload = function(){
+        function UpdateWeather(){
             let oScript = document.createElement('script');
             // https://query.asilu.com/weather/baidu/?city=${oCity.value}&callback=GetRealWeather
-            oScript.src = `https://query.asilu.com/weather/baidu/?city=&callback=GetRealWeather`;
+            oScript.src = `https://query.asilu.com/weather/baidu/?city=${realLoca}&callback=GetRealWeather`;
             oScript.hidden = true;
             document.body.appendChild(oScript);
+    }
+    function ChangeLoca(){
+        let loca = "";
+        if(loca = window.prompt("更新位置")){
+            realLoca = loca;
         }
+        UpdateWeather();
+    }
+    window.onload = UpdateWeather;
     </script>
     </body>
 </html>
