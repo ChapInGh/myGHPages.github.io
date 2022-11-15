@@ -229,7 +229,9 @@
     let sum=0,code=90;
     let arr = SavedArr.join("").replaceAll('#',',').split(',');
     for(let i=1;i<arr.length-1;i++){
-        sum += arr[i]*1;
+        if(arr[i] * 1.0){
+            sum += arr[i]*1;
+        }
     }
     do{
         code += sum%10;
@@ -594,6 +596,14 @@ function Save(){
     store[savingStr.length-1] = "#";
     savingStr = store.join('');
     // console.log("工人雇佣信息："+savingStr);
+	
+    //保存地址
+    savingStr += realLoca;
+    savingStr += "#";
+    // console.log(savingStr);
+
+    //信息收集完成
+	
     code = GetCheckingCode(store)+"^"+savingStr;
     copyTool.value = code;
     copyTool.select();
@@ -633,6 +643,8 @@ function Read(str){
             }
             // Worker();
         }
+	    //  地址
+        realLoca = str.split('^')[1].split('#')[3];
         
     }else{
         alert("存档信息无效");
