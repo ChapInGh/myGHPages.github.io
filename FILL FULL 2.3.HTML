@@ -135,14 +135,17 @@
                         console.log(renew);
                         total += roundTotal;
                         score += round;
+			    let nextRou = confirm(`恭喜过关！！！\n分数：${score}\n下一关：连${level+1}消${strenFlag == 1?" 增强":""}`);
                         if(strenFlag){
                             strenFlag = 0;
+				if(nextRou){
                             level ++;
 				dimension += 5;//测试
+				}
                         }else{
                             strenFlag = 1;
                         }
-                        confirm(`恭喜过关！！！\n分数：${score}\n下一关：连${level+1}消${strenFlag == 1?" 增强":""}`);
+                        //confirm(`恭喜过关！！！\n分数：${score}\n下一关：连${level+1}消${strenFlag == 1?" 增强":""}`);
                         ShowBanner();
                     }
                     items = [];
