@@ -36,6 +36,7 @@
             justify-content: center;
             box-sizing: border-box;
             flex-basis: 5%;
+            max-width: 5%;
             background-color: #8abcd1;
             border:  1px solid black;
         }
@@ -69,7 +70,7 @@
     <div id="banner">
         上 岸
     </div>
-    <input type="text" id="route">
+    <input type="text" id="route" hidden>
     <script>
         let colors = ["#96c24e","#41b349","#f8df72","#867018","#6e8b74","#fa983a","#b2cf87",
         "#d85916","#f2481b","#82ccdd","#f7e8aa"];
@@ -88,6 +89,7 @@
         let divBanner = document.querySelector("#banner");
         let route = [];
         let copyTool = document.querySelector("#route");
+        let showFlag = 1;
 
         function ShowRoute(){
             if(route.length >= 0){
@@ -111,20 +113,34 @@
             }
         }
         function ShowBanner(){
-            divBanner.style.visibility = "visible";
-            divBanner.style.opacity = 1;
+            if(showFlag){
+                divBanner.style.visibility = "visible";
+                divBanner.style.opacity = 1;
+            }
             setTimeout(()=>{
-                divBanner.style.visibility = "hidden";
-                divBanner.style.opacity = 0;
-                if(copyTool.value != "")
-                    document.execCommand("copy");
-                return alert(`恭喜上岸！！！\n此次上岸共走了${step}步`);
+                if(showFlag){
+                    showFlag = 0;
+                    divBanner.style.visibility = "hidden";
+                    divBanner.style.opacity = 0;
+                    if(copyTool.value != ""){
+                        document.execCommand("copy");
+                        copyTool.hidden = true;
+                    }
+                    alert(`恭喜上岸！！！\n此次上岸共走了${step}步`);
+                    myBody.innerHTML = "";
+                    divItems = [];
+                    Map();
+                    divItems[targetPos].innerHTML = "⭐";
+                    divItems[targetPos].style.backgroundColor = "white";
+                    ShowRoute();
+                }
             },2000);
         }
 
         function Success(){
             if(position == targetPos){
                 ShowBanner();
+                copyTool.hidden = false;
                 copyTool.value = route.join(",");
                 copyTool.select();
             }
@@ -180,17 +196,21 @@
         }
         function EventForP2(){
             let nextPos = -1;
+			let setFlag = 0;
             position = this.getAttribute("index")*1.0;
             for(let i=1;i<=9;i++){
                 switch(i){
-                    case 2:{nextPos = GetInfo(position,0,1);break;};
+                    case 2:{setFlag = 1;nextPos = GetInfo(position,0,1);break;};
                     case 4:{nextPos = GetInfo(position,1,1);break;};
                     case 5:{nextPos = position;break;};
                     case 6:{nextPos = GetInfo(position,1,0);break;};
-                    case 8:{nextPos = GetInfo(position,0,0);break;};
+                    case 8:{setFlag = 1;nextPos = GetInfo(position,0,0);break;};
                 }
                 if(nextPos != -1){
-                    divItems[i-1].innerHTML = items[nextPos].number;
+					if(setFlag){
+						divItems[i-1].innerHTML = items[nextPos].number;
+						setFlag = 0;
+					}
                     divItems[i-1].setAttribute("index",nextPos);
                     nextPos = -1;
                 }
