@@ -31,6 +31,9 @@
             border:  1px solid black;
         }
         .unit{
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-sizing: border-box;
             flex-basis: 5%;
             background-color: #8abcd1;
@@ -260,7 +263,7 @@
                 }while(row<1||row>num||col<1||col>20);
                 flag = (row-1)*20+col-1;
                 targetPos = flag;
-                divItems[flag].innerHTML = "🏁";
+                divItems[flag].innerHTML = "⭐";
                 divItems[flag].style.backgroundColor = "white";
             }else{
                 Maze();
