@@ -59,19 +59,21 @@
         }
         #route{
             position: absolute;
-            left: -100px;
+            top: -100px;
         }
     </style>
 </head>
 <body>
+	<input type="text" id="route">
     <div id="myBody">
 
     </div>
     <div id="banner">
         上 岸
     </div>
-    <input type="text" id="route" hidden>
+
     <script>
+		//<input type="text" id="route" hidden>
         let colors = ["#96c24e","#41b349","#f8df72","#867018","#6e8b74","#fa983a","#b2cf87",
         "#d85916","#f2481b","#82ccdd","#f7e8aa"];
         let items = [];
@@ -79,7 +81,7 @@
         let divItems = myBody.getElementsByClassName("unit");
         let div;
         let num = 20;
-        let rowBase = 20;
+        let colBase = 20;
         let index1 = -1;
         let tag = -1;
         let position = Math.floor(Math.random()*20*num);
@@ -90,7 +92,120 @@
         let route = [];
         let copyTool = document.querySelector("#route");
         let showFlag = 1;
+        let startTime = Date.now();
+        let completeTime;
+        let randomEventNum = 5;
 
+        function GetMaxMin(row,col1,col2,max){
+            let store;
+            if(max){
+                store = -1;
+            }else{
+                store = Infinity;
+            }
+            for(let i=row-1,j=col1-1;j<col2;j++){
+                if(max){
+                    if(items[i*colBase+j].number > store){
+                        store = items[i*colBase+j].number;
+                    }
+                }else{
+                    if(items[i*colBase+j].number < store){
+                        store = items[i*colBase+j].number;
+                    }
+                }
+            }
+            return store;
+        }
+        function SuperPlus(){
+            let i,j1,j2,result,myAns;
+            let min,max;
+            do{
+                result = 0;
+                i = Math.ceil(Math.random()*colBase);
+                j1 = Math.ceil(Math.random()*colBase);
+                j2 = colBase;
+                for(let j=j1;j<=j2;j++){
+                        result += items[(i-1)*colBase+j-1].number;
+                }
+                console.log(result);//TEST
+                myAns = window.prompt(`突发事件：\n第${i}行：从${j1}列到${j2}列全部数字相加 = ?`);
+            }while(result != myAns);
+        }
+        function Counter(){
+            let i,j,target,result,myAns;
+            do{
+                result = 0;
+                i = Math.ceil(Math.random()*colBase);
+                target = items[Math.floor(Math.random()*colBase)].number;
+                for(j=1;j<=colBase;j++){
+                    if(items[(i-1)*colBase+j-1].number == target)
+                        result++;
+                }
+                console.log(result);//TEST
+                myAns = window.prompt(`突发事件：\n第${i}行：共有多少个 ${target}?`);
+            }while(result != myAns);
+        }
+        function MaxMin(){
+            let i,j1,j2,result,myAns,swap;
+            let min,max;
+            do{
+                i = Math.ceil(Math.random()*colBase);
+                j1 = Math.ceil(Math.random()*colBase);
+                j2 = colBase;
+                // if(j1>j2){
+                //     swap = j1;
+                //     j1 = j2;
+                //     j2 = swap;
+                // }
+                max = GetMaxMin(i,j1,j2,1);
+                min = GetMaxMin(i,j1,j2,0);
+                result = max * 10 + min;
+                console.log(result);//TEST
+                myAns = window.prompt(`突发事件：\n第${i}行：从${j1}列到${j2}列（包含）中最大数 * 10 + 最小数 = ?`);
+            }while(result != myAns);
+        }
+        function Multi(){
+            let i,j1,j2,result,myAns;
+            i = 1;
+            do{
+                j1 = Math.ceil(Math.random()*colBase);
+                j2 = Math.ceil(Math.random()*colBase);
+                result = items[(i-1)*colBase+j1-1].number * items[(i-1)*colBase+j2-1].number;
+                console.log(result);//TEST
+                myAns = window.prompt(`突发事件：\n第${i}行：第${j1}列 * 第${j2}列 = ?`);
+            }while(result != myAns);
+        }
+        function Plus(){
+            let i,j1,j2,result,myAns;
+            i = 1;
+            do{
+                j1 = Math.ceil(Math.random()*colBase);
+                j2 = Math.ceil(Math.random()*colBase);
+                result = items[(i-1)*colBase+j1-1].number + items[(i-1)*colBase+j2-1].number;
+                console.log(result);//TEST
+                myAns = window.prompt(`突发事件：\n第${i}行：第${j1}列 + 第${j2}列 = ?`);
+            }while(result != myAns);
+        }
+        function GetGameTime(){
+            return Math.floor((Date.now()-startTime)/1000);
+        }
+        function ShowTime(){
+            divItems[2].innerHTML = `${Math.floor((Date.now()-startTime)/1000)}`;
+        }
+        function RandomEvent(){
+            if(position != targetPos && randomEventNum-- > 0){
+                console.log(randomEventNum);
+                
+                let eventNum = Math.floor(Math.random()*8);
+                switch(eventNum){ 
+                    case 0:{Plus();break;}
+                    case 1:{Multi();break;}
+                    case 2:{MaxMin();break;}
+                    case 3:{Counter();break;}
+                    case 4:{SuperPlus();break;}
+                }
+            }
+        }
         function ShowRoute(){
             if(route.length >= 0){
                 for(let i=0;i<route.length-1;i++){
@@ -126,7 +241,7 @@
                         document.execCommand("copy");
                         copyTool.hidden = true;
                     }
-                    alert(`恭喜上岸！！！\n此次上岸共走了${step}步`);
+                    alert(`恭喜上岸！！！\n此次上岸共走了 ${step} 步\n共用时 ${completeTime} 秒`);
                     myBody.innerHTML = "";
                     divItems = [];
                     Map();
@@ -139,6 +254,7 @@
 
         function Success(){
             if(position == targetPos){
+                completeTime = GetGameTime();
                 ShowBanner();
                 copyTool.hidden = false;
                 copyTool.value = route.join(",");
@@ -147,8 +263,8 @@
         }
         function GetInfo(position,row,l_t){
             let i,j;
-            i = Math.floor(position/rowBase);
-            j = position%rowBase;
+            i = Math.floor(position/colBase);
+            j = position%colBase;
             if(row){
                 if(l_t){
                     j -= 1;
@@ -162,7 +278,7 @@
                     i += 1;
                 }
             }
-            return (i+num)%num*rowBase+((j+rowBase)%rowBase);
+            return (i+num)%num*colBase+((j+colBase)%colBase);
         }
         function Maze(){
             let nextPos = -1;
@@ -170,12 +286,13 @@
                 div = document.createElement("div");
                 div.className = "maze";
                 switch(i){
-                    case 1:{div.innerHTML = `目 标：${Math.floor(targetPos/rowBase)+1}行 ${targetPos%rowBase+1}列`;break;}
+                    case 1:{div.innerHTML = `目 标：${Math.floor(targetPos/colBase)+1}行 ${targetPos%colBase+1}列`;div.style.fontSize = "1.5em";div.style.color = "white";break;}
+                    case 3:{div.innerHTML = `0`;div.style.fontSize = "1.5em";div.style.color = "white";break;};
+                    case 5:{div.setAttribute("index",position);};
                     case 2:;
                     case 4:;
-                    case 5:{div.setAttribute("index",position);};
                     case 6:;
-                    case 8:{div.onclick = EventForP2.bind(div);};
+                    case 8:{div.onclick = EventForP2.bind(div);break;};
                 }
                 myBody.appendChild(div);
                 divItems.push(div);
@@ -217,10 +334,13 @@
             }
             step++;
             route.push(position);
+            if(step > 0)
+                RandomEvent();
             Success();
         }
         function EventForP1(){
             if(this.getAttribute("index")*1.0 == flag){
+                completeTime = GetGameTime();
                 route = window.prompt("已到达重点？").split(",");
                 ShowRoute();
                 return 0;
@@ -287,6 +407,7 @@
                 divItems[flag].style.backgroundColor = "white";
             }else{
                 Maze();
+                setInterval(ShowTime, 1000);
             }
         }
     CreateItems();
