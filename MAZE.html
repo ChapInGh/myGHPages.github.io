@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,body{
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        #myBody{
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-wrap: wrap;
+        }
+        .maze{
+            box-sizing: border-box;
+            align-items: center;
+            justify-content: center;
+            min-width: 30%;
+            flex: 1;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            background-color: #8abcd1;
+            border:  1px solid black;
+        }
+        .unit{
+            box-sizing: border-box;
+            flex-basis: 5%;
+            background-color: #8abcd1;
+            border:  1px solid black;
+        }
+        div#banner{
+            position: absolute;
+            /* float: left; */
+            top: 30%;    
+            height: 30%;
+            width: 100%;
+            background: gold;
+            opacity: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            color: red;
+            box-shadow: 0 0 10px gold;
+            visibility:hidden;
+            transition: opacity 2s;
+        }
+        #GameStore{
+            position: absolute;
+            top: -100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="myBody">
+
+    </div>
+    <div id="banner">
+        上 岸
+    </div>
+    <input type="text" id="route">
+    <script>
+        let colors = ["#96c24e","#41b349","#f8df72","#867018","#6e8b74","#fa983a","#b2cf87",
+        "#d85916","#f2481b","#82ccdd","#f7e8aa"];
+        let items = [];
+        let myBody = document.querySelector("div#myBody");
+        let divItems = myBody.getElementsByClassName("unit");
+        let div;
+        let num = 20;
+        let rowBase = 20;
+        let index1 = -1;
+        let tag = -1;
+        let position = Math.floor(Math.random()*20*num);
+        let targetPos = Math.floor(Math.random()*20*num);
+        let step = -1;
+        let flag = 0;
+        let divBanner = document.querySelector("#banner");
+        let route = [];
+        let copyTool = document.querySelector("#route");
+
+        function ShowRoute(){
+            if(route.length >= 0){
+                for(let i=0;i<route.length-1;i++){
+                    divItems[route[i]].style.backgroundColor = "white";
+                    divItems[route[i]].innerHTML = ``;
+                }
+                for(let i=0;i<route.length-1;i++){
+                    setTimeout(()=>{
+                        if(divItems[route[i]].innerHTML == ''){
+                            divItems[route[i]].innerHTML = `🚩${i}`;
+                        }else{
+                            divItems[route[i]].innerHTML += `,${i}`;
+                        }
+                    },100);
+                }
+            }
+            if(route[route.length-1]*1.0 == targetPos){
+                step = route.length-1;
+                ShowBanner();
+            }
+        }
+        function ShowBanner(){
+            divBanner.style.visibility = "visible";
+            divBanner.style.opacity = 1;
+            setTimeout(()=>{
+                divBanner.style.visibility = "hidden";
+                divBanner.style.opacity = 0;
+                if(copyTool.value != "")
+                    document.execCommand("copy");
+                return alert(`恭喜上岸！！！\n此次上岸共走了${step}步`);
+            },2000);
+        }
+
+        function Success(){
+            if(position == targetPos){
+                ShowBanner();
+                copyTool.value = route.join(",");
+                copyTool.select();
+            }
+        }
+        function GetInfo(position,row,l_t){
+            let i,j;
+            i = Math.floor(position/rowBase);
+            j = position%rowBase;
+            if(row){
+                if(l_t){
+                    j -= 1;
+                }else{
+                    j += 1;
+                }
+            }else{
+                if(l_t){
+                    i -= 1;
+                }else{
+                    i += 1;
+                }
+            }
+            return (i+num)%num*rowBase+((j+rowBase)%rowBase);
+        }
+        function Maze(){
+            let nextPos = -1;
+            for(let i=1;i<=9;i++){
+                div = document.createElement("div");
+                div.className = "maze";
+                switch(i){
+                    case 1:{div.innerHTML = `目 标：${Math.floor(targetPos/rowBase)+1}行 ${targetPos%rowBase+1}列`;break;}
+                    case 2:;
+                    case 4:;
+                    case 5:{div.setAttribute("index",position);};
+                    case 6:;
+                    case 8:{div.onclick = EventForP2.bind(div);};
+                }
+                myBody.appendChild(div);
+                divItems.push(div);
+            }
+            divItems[4].click();
+        }
+        function Map(){
+            for(let i=0;i<items.length;i++){
+                div = document.createElement("div");
+                div.className = "unit";
+                div.setAttribute("index",i);
+                div.innerHTML = items[i].number;
+                div.onclick = EventForP1.bind(div);
+                myBody.appendChild(div);
+                divItems.push(div);
+            }
+            Dry();
+        }
+        function EventForP2(){
+            let nextPos = -1;
+            position = this.getAttribute("index")*1.0;
+            for(let i=1;i<=9;i++){
+                switch(i){
+                    case 2:{nextPos = GetInfo(position,0,1);break;};
+                    case 4:{nextPos = GetInfo(position,1,1);break;};
+                    case 5:{nextPos = position;break;};
+                    case 6:{nextPos = GetInfo(position,1,0);break;};
+                    case 8:{nextPos = GetInfo(position,0,0);break;};
+                }
+                if(nextPos != -1){
+                    divItems[i-1].innerHTML = items[nextPos].number;
+                    divItems[i-1].setAttribute("index",nextPos);
+                    nextPos = -1;
+                }
+            }
+            step++;
+            route.push(position);
+            Success();
+        }
+        function EventForP1(){
+            if(this.getAttribute("index")*1.0 == flag){
+                route = window.prompt("已到达重点？").split(",");
+                ShowRoute();
+                return 0;
+            }
+            if(index1<0){
+                this.style.backgroundColor = "gold";
+                this.innerHTML = '';
+            }else{
+                divItems[index1].innerHTML = items[index1].number;
+                divItems[index1].style.backgroundColor = colors[divItems[index1].innerHTML*1.0];
+                this.style.backgroundColor = "gold";
+                this.innerHTML = '';
+            }
+            index1 = this.getAttribute("index")*1.0;
+        }
+        function GetRandom(offset){
+            let my_random_num = 0;
+            // my_random_num = Math.floor(Date.now()/2400) * 9301 + 49297 % 233280;
+            my_random_num = Math.floor(Date.now()/1000) * 9301 + 49297 % 233280;
+            my_random_num = my_random_num / 233280;
+            my_random_num = Math.floor(my_random_num % 100);
+            my_random_num = Math.pow(my_random_num+offset,2);
+            if(tag == -1)
+                // tag = (my_random_num%10 + Math.floor(my_random_num/10%10)+Math.floor(my_random_num/100%10)+Math.floor(my_random_num/1000%10))%10;
+                tag = my_random_num;
+            return (my_random_num%10 + Math.floor(my_random_num/10%10)+Math.floor(my_random_num/100%10)+Math.floor(my_random_num/1000%10))%10;
+        }
+        function CreateItems(){
+            if(divItems != null)
+				myBody.innerHTML = "";
+			divItems = [];
+            for(i=1;i<=20;i++){
+                for(j=1;j<=num;j++){
+                    let ran = GetRandom(i*20+j);
+                    items.push({number:ran});
+                }
+            }
+            
+        }
+        function Dry(){
+            let i,j,index;
+            let div;
+            let divItems = myBody.getElementsByClassName("unit");
+            for(i=1;i<=20;i++){
+                for(j=1;j<=num;j++){
+                    index = (i-1)*20+j-1;
+                    div = divItems[index];
+                    div.style.backgroundColor = colors[div.innerHTML*1.0];
+                }
+            }
+        }
+        function Menu(){
+            let opt = window.confirm(`当前地图号：${tag}\n确定选择地图，取消选择走迷宫`);
+            if(opt == true){
+                let row,col;
+                Map();
+                do{
+                    row = window.prompt("目的地行号：")*1.0;
+                    col = window.prompt("目的地列号：")*1.0;
+                }while(row<1||row>num||col<1||col>20);
+                flag = (row-1)*20+col-1;
+                targetPos = flag;
+                divItems[flag].innerHTML = "🏁";
+                divItems[flag].style.backgroundColor = "white";
+            }else{
+                Maze();
+            }
+        }
+    CreateItems();
+    Menu();
+    
+    </script>
+</body>
+</html>
