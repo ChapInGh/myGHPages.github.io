@@ -94,8 +94,38 @@
         let showFlag = 1;
         let startTime = Date.now();
         let completeTime;
-        let randomEventNum = 5;
+        let eventFlag = 1;
+        let posInfoFlag = 1;
+        let direction = [0,0,0,0];
+        let stopEventFlag = 1;
 
+        function Binary(){
+            let i,j,result,myAns;
+            do{
+                result = 0;
+                i = Math.ceil(Math.random()*colBase);
+                j = Math.ceil(Math.random()*colBase);
+                result = items[(i-1)*colBase+j-1].number;
+                console.log(result);//TEST
+                myAns = window.prompt(`突发事件：\n第${i}行 第${j}列 转换为四位二进制 = ?`);
+                myAns = Math.floor(myAns/1000)*8+Math.floor(myAns/100)%10*4+Math.floor(myAns/10)%10*2+myAns%10;
+            }while(result != myAns);
+        }
+        function StopEvent(){
+            if(stopEventFlag && confirm("确认后不再出现随机事件且不会显示周围位置信息")){
+                stopEventFlag = 0;
+                eventFlag = 0;
+                posInfoFlag = 0;
+                for(let i=0;i<divItems.length;i++){
+                    switch(i){
+                        case 1:;
+                        case 3:;
+                        case 5:;
+                        case 7:divItems[i].innerHTML = '0';
+                    }
+                }
+            }
+        }
         function GetMaxMin(row,col1,col2,max){
             let store;
             if(max){
@@ -193,16 +223,15 @@
             divItems[2].innerHTML = `${Math.floor((Date.now()-startTime)/1000)}`;
         }
         function RandomEvent(){
-            if(position != targetPos && randomEventNum-- > 0){
-                console.log(randomEventNum);
-                
-                let eventNum = Math.floor(Math.random()*8);
-                switch(eventNum){ 
+            if(position != targetPos && eventFlag){
+                let eventNum = Math.floor(Math.random()*9);
+                switch(eventNum){
                     case 0:{Plus();break;}
                     case 1:{Multi();break;}
                     case 2:{MaxMin();break;}
                     case 3:{Counter();break;}
                     case 4:{SuperPlus();break;}
+                    case 5:{Binary();break;}
                 }
             }
         }
@@ -285,14 +314,16 @@
             for(let i=1;i<=9;i++){
                 div = document.createElement("div");
                 div.className = "maze";
+                
                 switch(i){
                     case 1:{div.innerHTML = `目 标：${Math.floor(targetPos/colBase)+1}行 ${targetPos%colBase+1}列`;div.style.fontSize = "1.5em";div.style.color = "white";break;}
                     case 3:{div.innerHTML = `0`;div.style.fontSize = "1.5em";div.style.color = "white";break;};
+                    case 9:{div.onclick = StopEvent.bind(div);div.innerHTML = `我已定位`;div.style.fontSize = "1.5em";div.style.color = "#33141e";break;};
                     case 5:{div.setAttribute("index",position);};
-                    case 2:;
-                    case 4:;
-                    case 6:;
-                    case 8:{div.onclick = EventForP2.bind(div);break;};
+                    case 2:{div.onclick = EventForP2.bind(div,0);break;};
+                    case 4:{div.onclick = EventForP2.bind(div,1);break;};
+                    case 6:{div.onclick = EventForP2.bind(div,2);break;};
+                    case 8:{div.onclick = EventForP2.bind(div,3);break;};
                 }
                 myBody.appendChild(div);
                 divItems.push(div);
@@ -311,32 +342,37 @@
             }
             Dry();
         }
-        function EventForP2(){
+        function EventForP2(dirNum){
             let nextPos = -1;
 			let setFlag = 0;
-            position = this.getAttribute("index")*1.0;
-            for(let i=1;i<=9;i++){
-                switch(i){
-                    case 2:{setFlag = 1;nextPos = GetInfo(position,0,1);break;};
-                    case 4:{nextPos = GetInfo(position,1,1);break;};
-                    case 5:{nextPos = position;break;};
-                    case 6:{nextPos = GetInfo(position,1,0);break;};
-                    case 8:{setFlag = 1;nextPos = GetInfo(position,0,0);break;};
+            if(posInfoFlag){
+                position = this.getAttribute("index")*1.0;
+                for(let i=1;i<=9;i++){
+                    switch(i){
+                        case 2:{setFlag = 1;nextPos = GetInfo(position,0,1);break;};
+                        case 4:{nextPos = GetInfo(position,1,1);break;};
+                        case 5:{nextPos = position;break;};
+                        case 6:{nextPos = GetInfo(position,1,0);break;};
+                        case 8:{setFlag = 1;nextPos = GetInfo(position,0,0);break;};
+                    }
+                    if(nextPos != -1){
+                        if(setFlag){
+                            divItems[i-1].innerHTML = items[nextPos].number;
+                            setFlag = 0;
+                        }
+                        divItems[i-1].setAttribute("index",nextPos);
+                        nextPos = -1;
+                    }
                 }
-                if(nextPos != -1){
-					if(setFlag){
-						divItems[i-1].innerHTML = items[nextPos].number;
-						setFlag = 0;
-					}
-                    divItems[i-1].setAttribute("index",nextPos);
-                    nextPos = -1;
-                }
+                step++;
+                route.push(position);
+                if(step > 0)
+                    RandomEvent();
+                Success();
+            }else{
+                if(this != divItems[4])
+                    this.innerHTML = ++direction[dirNum];
             }
-            step++;
-            route.push(position);
-            if(step > 0)
-                RandomEvent();
-            Success();
         }
         function EventForP1(){
             if(this.getAttribute("index")*1.0 == flag){
