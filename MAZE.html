@@ -371,8 +371,8 @@
             let nextPos = -1;
 			let setFlag = 0;
             position = this.getAttribute("index")*1.0;
-            if(this != divItems[4]){
-                ++direction[dirNum];
+            if(!posInfoFlag && this != divItems[4]){
+                this.innerHTML = ++direction[dirNum];
             }
             for(let i=1;i<=9;i++){
                 switch(i){
@@ -386,10 +386,6 @@
                     if(setFlag){
                         if(posInfoFlag){
                             divItems[i-1].innerHTML = items[nextPos].number;
-                        }else{
-                            if(this != divItems[4]){
-                                this.innerHTML = direction[dirNum];
-                            }
                         }
                         setFlag = 0;
                     }
