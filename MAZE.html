@@ -82,7 +82,6 @@
         let div;
         let num = 20;
         let colBase = 20;
-        let index1 = -1;
         let tag = -1;
         let position = Math.floor(Math.random()*20*num);
         let targetPos = Math.floor(Math.random()*20*num);
@@ -100,6 +99,17 @@
         let stopEventFlag = 1;
         let pageReload = 0;
 
+        function GetMsg(num){
+            let msg = "";
+            if(num<3){
+                msg = "X≤2";
+            }else if(num<7){
+                msg = "3≤X≤6";
+            }else{
+                msg = "7≤X≤9";
+            }
+            return msg;
+        }
         function Reload(){
             pageReload++;
                 if(pageReload>5){
@@ -345,7 +355,6 @@
             for(let i=1;i<=9;i++){
                 div = document.createElement("div");
                 div.className = "maze";
-                
                 switch(i){
                     case 1:{div.innerHTML = `目 标：${Math.floor(targetPos/colBase)+1}行 ${targetPos%colBase+1}列`;div.style.fontSize = "1.5em";div.style.color = "white";break;}
                     case 3:{div.innerHTML = `0`;div.style.fontSize = "1.5em";div.style.color = "white";break;};
@@ -391,7 +400,7 @@
                 if(nextPos != -1){
                     if(setFlag){
                         if(posInfoFlag){
-                            divItems[i-1].innerHTML = items[nextPos].number;
+                            divItems[i-1].innerHTML = GetMsg(items[nextPos].number);
                         }
                         setFlag = 0;
                     }
@@ -406,22 +415,22 @@
             Success();
         }
         function EventForP1(){
+            let index = this.getAttribute("index");
             if(this.getAttribute("index")*1.0 == flag){
                 completeTime = GetGameTime();
                 route = window.prompt("已抵达摘星地点？").split(",");
                 ShowRoute();
                 return 0;
             }
-            if(index1<0){
+            if(items[index].state == 0){
+                items[index].state = 1;
                 this.style.backgroundColor = "gold";
-                this.innerHTML = '';
+                this.innerHTML += '🚩';
             }else{
-                divItems[index1].innerHTML = items[index1].number;
-                divItems[index1].style.backgroundColor = colors[divItems[index1].innerHTML*1.0];
-                this.style.backgroundColor = "gold";
-                this.innerHTML = '';
+                items[index].state = 0;
+                this.style.backgroundColor = colors[items[index].number];
+                this.innerHTML = items[index].number;
             }
-            index1 = this.getAttribute("index")*1.0;
         }
         function GetRandom(offset){
             let my_random_num = 0;
@@ -442,7 +451,7 @@
             for(i=1;i<=20;i++){
                 for(j=1;j<=num;j++){
                     let ran = GetRandom(i*20+j);
-                    items.push({number:ran});
+                    items.push({number:ran,state:0});
                 }
             }
         }
@@ -463,11 +472,14 @@
             if(opt == true){
                 let row,col;
                 Map();
+                pageReload = 3;
                 do{
                     if(Reload())
                         break;
-                    row = window.prompt("目的地行号：")*1.0;
-                    col = window.prompt("目的地列号：")*1.0;
+                    // row = window.prompt("目的地行号：")*1.0;
+                    // col = window.prompt("目的地列号：")*1.0;
+                    row = 1;//TEST
+                    col = 1;
                 }while(row<1||row>num||col<1||col>20);
                 flag = (row-1)*20+col-1;
                 targetPos = flag;
