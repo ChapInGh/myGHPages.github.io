@@ -370,34 +370,38 @@
         function EventForP2(dirNum){
             let nextPos = -1;
 			let setFlag = 0;
-            if(posInfoFlag){
-                position = this.getAttribute("index")*1.0;
-                for(let i=1;i<=9;i++){
-                    switch(i){
-                        case 2:{setFlag = 1;nextPos = GetInfo(position,0,1);break;};
-                        case 4:{nextPos = GetInfo(position,1,1);break;};
-                        case 5:{nextPos = position;break;};
-                        case 6:{nextPos = GetInfo(position,1,0);break;};
-                        case 8:{setFlag = 1;nextPos = GetInfo(position,0,0);break;};
-                    }
-                    if(nextPos != -1){
-                        if(setFlag){
-                            divItems[i-1].innerHTML = items[nextPos].number;
-                            setFlag = 0;
-                        }
-                        divItems[i-1].setAttribute("index",nextPos);
-                        nextPos = -1;
-                    }
-                }
-                step++;
-                route.push(position);
-                if(step > 0)
-                    RandomEvent();
-                Success();
-            }else{
-                if(this != divItems[4])
-                    this.innerHTML = ++direction[dirNum];
+            position = this.getAttribute("index")*1.0;
+            if(this != divItems[4]){
+                ++direction[dirNum];
             }
+            for(let i=1;i<=9;i++){
+                switch(i){
+                    case 2:{setFlag = 1;nextPos = GetInfo(position,0,1);break;};
+                    case 4:{nextPos = GetInfo(position,1,1);break;};
+                    case 5:{nextPos = position;break;};
+                    case 6:{nextPos = GetInfo(position,1,0);break;};
+                    case 8:{setFlag = 1;nextPos = GetInfo(position,0,0);break;};
+                }
+                if(nextPos != -1){
+                    if(setFlag){
+                        if(posInfoFlag){
+                            divItems[i-1].innerHTML = items[nextPos].number;
+                        }else{
+                            if(this != divItems[4]){
+                                this.innerHTML = direction[dirNum];
+                            }
+                        }
+                        setFlag = 0;
+                    }
+                    divItems[i-1].setAttribute("index",nextPos);
+                    nextPos = -1;
+                }
+            }
+            step++;
+            route.push(position);
+            if(step > 0)
+                RandomEvent();
+            Success();
         }
         function EventForP1(){
             if(this.getAttribute("index")*1.0 == flag){
