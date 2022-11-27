@@ -110,6 +110,7 @@
                         pageReload = 0;
                     }
                 }
+                return false;
         }
         function Binary(){
             let i,j,result,myAns;
@@ -166,7 +167,8 @@
             let min,max;
             pageReload = 0;
             do{
-                Reload();
+                if(Reload())
+                    break;
                 result = 0;
                 i = Math.ceil(Math.random()*colBase);
                 j1 = Math.ceil(Math.random()*colBase);
@@ -182,7 +184,8 @@
             let i,j,target,result,myAns;
             pageReload = 0;
             do{
-                Reload();
+                if(Reload())
+                    break;
                 result = 0;
                 i = Math.ceil(Math.random()*colBase);
                 target = items[Math.floor(Math.random()*colBase)].number;
@@ -199,7 +202,8 @@
             let min,max;
             pageReload = 0;
             do{
-                Reload();
+                if(Reload())
+                    break;
                 i = Math.ceil(Math.random()*colBase);
                 j1 = Math.ceil(Math.random()*colBase);
                 j2 = colBase;
@@ -220,7 +224,8 @@
             i = 1;
             pageReload = 0;
             do{
-                Reload();
+                if(Reload())
+                    break;
                 j1 = Math.ceil(Math.random()*colBase);
                 j2 = Math.ceil(Math.random()*colBase);
                 result = items[(i-1)*colBase+j1-1].number * items[(i-1)*colBase+j2-1].number;
@@ -233,7 +238,8 @@
             i = 1;
             pageReload = 0;
             do{
-                Reload();
+                if(Reload())
+                    break;
                 j1 = Math.ceil(Math.random()*colBase);
                 j2 = Math.ceil(Math.random()*colBase);
                 result = items[(i-1)*colBase+j1-1].number + items[(i-1)*colBase+j2-1].number;
@@ -439,7 +445,6 @@
                     items.push({number:ran});
                 }
             }
-            
         }
         function Dry(){
             let i,j,index;
