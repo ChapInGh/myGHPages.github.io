@@ -100,25 +100,31 @@
         let stopEventFlag = 1;
         let pageReload = 0;
 
-        function Binary(){
-            let i,j,result,myAns;
-            do{
-                pageReload++;
+        function Reload(){
+            pageReload++;
                 if(pageReload>5){
                     if(confirm("结束游戏？")){
                         location.reload();
-                        break;
+                        return true;
+                    }else{
+                        pageReload = 0;
                     }
                 }
+        }
+        function Binary(){
+            let i,j,result,myAns;
+            pageReload = 0;
+            do{
+                if(Reload())
+                    break;
                 result = 0;
                 i = Math.ceil(Math.random()*colBase);
                 j = Math.ceil(Math.random()*colBase);
                 result = items[(i-1)*colBase+j-1].number;
                 console.log(result);//TEST
                 myAns = window.prompt(`突发事件：\n第${i}行 第${j}列 转换为四位二进制 = ?`);
-                myAns = Math.floor(myAns/1000)*8+Math.floor(myAns/100)%10*4+Math.floor(myAns/10)%10*2+myAns%10;
+                myAns = (Math.floor(myAns/1000)>0?8:0)+(Math.floor(myAns/100)%10>0?4:0)+(Math.floor(myAns/10)%10>0?2:0)+(myAns%10>0?1:0);
             }while(result != myAns);
-            pageReload = 0;
         }
         function StopEvent(){
             if(stopEventFlag && confirm("确认后不再出现随机事件且不会显示周围位置信息")){
@@ -158,14 +164,9 @@
         function SuperPlus(){
             let i,j1,j2,result,myAns;
             let min,max;
+            pageReload = 0;
             do{
-                pageReload++;
-                if(pageReload>5){
-                    if(confirm("结束游戏？")){
-                        location.reload();
-                        break;
-                    }
-                }
+                Reload();
                 result = 0;
                 i = Math.ceil(Math.random()*colBase);
                 j1 = Math.ceil(Math.random()*colBase);
@@ -176,18 +177,12 @@
                 console.log(result);//TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：从${j1}列到${j2}列全部数字相加 = ?`);
             }while(result != myAns);
-            pageReload = 0;
         }
         function Counter(){
             let i,j,target,result,myAns;
+            pageReload = 0;
             do{
-                pageReload++;
-                if(pageReload>5){
-                    if(confirm("结束游戏？")){
-                        location.reload();
-                        break;
-                    }
-                }
+                Reload();
                 result = 0;
                 i = Math.ceil(Math.random()*colBase);
                 target = items[Math.floor(Math.random()*colBase)].number;
@@ -198,19 +193,13 @@
                 console.log(result);//TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：共有多少个 ${target}?`);
             }while(result != myAns);
-            pageReload = 0;
         }
         function MaxMin(){
             let i,j1,j2,result,myAns,swap;
             let min,max;
+            pageReload = 0;
             do{
-                pageReload++;
-                if(pageReload>5){
-                    if(confirm("结束游戏？")){
-                        location.reload();
-                        break;
-                    }
-                }
+                Reload();
                 i = Math.ceil(Math.random()*colBase);
                 j1 = Math.ceil(Math.random()*colBase);
                 j2 = colBase;
@@ -225,45 +214,32 @@
                 console.log(result);//TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：从${j1}列到${j2}列（包含）中最大数 * 10 + 最小数 = ?`);
             }while(result != myAns);
-            pageReload = 0;
         }
         function Multi(){
             let i,j1,j2,result,myAns;
             i = 1;
+            pageReload = 0;
             do{
-                pageReload++;
-                if(pageReload>5){
-                    if(confirm("结束游戏？")){
-                        location.reload();
-                        break;
-                    }
-                }
+                Reload();
                 j1 = Math.ceil(Math.random()*colBase);
                 j2 = Math.ceil(Math.random()*colBase);
                 result = items[(i-1)*colBase+j1-1].number * items[(i-1)*colBase+j2-1].number;
                 console.log(result);//TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：第${j1}列 * 第${j2}列 = ?`);
             }while(result != myAns);
-            pageReload = 0;
         }
         function Plus(){
             let i,j1,j2,result,myAns;
             i = 1;
+            pageReload = 0;
             do{
-                pageReload++;
-                if(pageReload>5){
-                    if(confirm("结束游戏？")){
-                        location.reload();
-                        break;
-                    }
-                }
+                Reload();
                 j1 = Math.ceil(Math.random()*colBase);
                 j2 = Math.ceil(Math.random()*colBase);
                 result = items[(i-1)*colBase+j1-1].number + items[(i-1)*colBase+j2-1].number;
                 console.log(result);//TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：第${j1}列 + 第${j2}列 = ?`);
             }while(result != myAns);
-            pageReload = 0;
         }
         function GetGameTime(){
             return Math.floor((Date.now()-startTime)/1000);
