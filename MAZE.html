@@ -464,6 +464,8 @@
                 let row,col;
                 Map();
                 do{
+                    if(Reload())
+                        break;
                     row = window.prompt("目的地行号：")*1.0;
                     col = window.prompt("目的地列号：")*1.0;
                 }while(row<1||row>num||col<1||col>20);
