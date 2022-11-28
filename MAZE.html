@@ -261,7 +261,8 @@
             return Math.floor((Date.now()-startTime)/1000);
         }
         function ShowTime(){
-            divItems[2].innerHTML = `${Math.floor((Date.now()-startTime)/1000)}`;
+            if(divItems.length == 9)
+                divItems[2].innerHTML = `${Math.floor((Date.now()-startTime)/1000)}`;
         }
         function RandomEvent(){
             if(position != targetPos && eventFlag){
