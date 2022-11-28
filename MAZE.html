@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAZE</title>
     <style>
-        html,body{
+        html,
+        body {
             height: 100%;
             width: 100%;
             padding: 0;
             margin: 0;
         }
-        #myBody{
+
+        #myBody {
             display: flex;
             width: 100%;
             height: 100%;
             flex-wrap: wrap;
         }
-        .maze{
+
+        .maze {
             box-sizing: border-box;
             align-items: center;
             justify-content: center;
@@ -28,22 +32,23 @@
             display: flex;
             align-items: center;
             background-color: #8abcd1;
-            border:  1px solid black;
+            border: 1px solid black;
         }
-        .unit{
+
+        .unit {
             display: flex;
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            flex-basis: 5%;
-            max-width: 5%;
+            flex-basis: 10%;
             background-color: #8abcd1;
-            border:  1px solid black;
+            border: 1px solid black;
         }
-        div#banner{
+
+        div#banner {
             position: absolute;
             /* float: left; */
-            top: 30%;    
+            top: 30%;
             height: 30%;
             width: 100%;
             background: gold;
@@ -54,17 +59,19 @@
             font-size: 3em;
             color: red;
             box-shadow: 0 0 10px gold;
-            visibility:hidden;
+            visibility: hidden;
             transition: opacity 2s;
         }
-        #route{
+
+        #route {
             position: absolute;
             top: -100px;
         }
     </style>
 </head>
+
 <body>
-	<input type="text" id="route">
+    <input type="text" id="route">
     <div id="myBody">
 
     </div>
@@ -73,18 +80,19 @@
     </div>
 
     <script>
-		//<input type="text" id="route" hidden>
-        let colors = ["#96c24e","#41b349","#f8df72","#867018","#6e8b74","#fa983a","#b2cf87",
-        "#d85916","#f2481b","#82ccdd","#f7e8aa"];
+        //<input type="text" id="route" hidden>
+        let colors = ["#96c24e", "#41b349", "#f8df72", "#867018", "#6e8b74", "#fa983a", "#b2cf87",
+            "#d85916", "#f2481b", "#82ccdd", "#f7e8aa"
+        ];
         let items = [];
         let myBody = document.querySelector("div#myBody");
         let divItems = myBody.getElementsByClassName("unit");
         let div;
-        let num = 20;
-        let colBase = 20;
+        let num = 10;
+        let colBase = 10;
         let tag = -1;
-        let position = Math.floor(Math.random()*20*num);
-        let targetPos = Math.floor(Math.random()*20*num);
+        let position = Math.floor(Math.random() * colBase * num);
+        let targetPos = Math.floor(Math.random() * colBase * num);
         let step = -1;
         let flag = 0;
         let divBanner = document.querySelector("#banner");
@@ -95,220 +103,254 @@
         let completeTime;
         let eventFlag = 1;
         let posInfoFlag = 1;
-        let direction = [0,0,0,0];
+        let direction = [0, 0, 0, 0];
         let stopEventFlag = 1;
         let pageReload = 0;
 
-        function GetMsg(num){
+        function GetMsg(num) {
             let msg = "";
-            if(num<3){
-                msg = "X≤2";
-            }else if(num<7){
-                msg = "3≤X≤6";
-            }else{
-                msg = "7≤X≤9";
+            if (num <= 4) {
+                msg = "0≤X≤4";
+            } else if (num <= 9) {
+                msg = "5≤X≤9";
             }
             return msg;
         }
-        function Reload(){
+        function Reload() {
             pageReload++;
-                if(pageReload>5){
-                    if(confirm("结束游戏？")){
-                        location.reload();
-                        return true;
-                    }else{
-                        pageReload = 0;
-                    }
+            if (pageReload > 5) {
+                if (confirm("结束游戏？")) {
+                    location.reload();
+                    return true;
+                } else {
+                    pageReload = 0;
                 }
-                return false;
+            }
+            return false;
         }
-        function Binary(){
-            let i,j,result,myAns;
+
+        function Binary() {
+            let i, j, result, myAns;
             pageReload = 0;
-            do{
-                if(Reload())
+            do {
+                if (Reload())
                     break;
                 result = 0;
-                i = Math.ceil(Math.random()*colBase);
-                j = Math.ceil(Math.random()*colBase);
-                result = items[(i-1)*colBase+j-1].number;
-                console.log(result);//TEST
+                i = Math.ceil(Math.random() * colBase);
+                j = Math.ceil(Math.random() * colBase);
+                result = items[(i - 1) * colBase + j - 1].number;
+                console.log(result); //TEST
                 myAns = window.prompt(`突发事件：\n第${i}行 第${j}列 转换为四位二进制 = ?`);
-                myAns = (Math.floor(myAns/1000)>0?8:0)+(Math.floor(myAns/100)%10>0?4:0)+(Math.floor(myAns/10)%10>0?2:0)+(myAns%10>0?1:0);
-            }while(result != myAns);
+                myAns = (Math.floor(myAns / 1000) > 0 ? 8 : 0) + (Math.floor(myAns / 100) % 10 > 0 ? 4 : 0) + (Math
+                    .floor(myAns / 10) % 10 > 0 ? 2 : 0) + (myAns % 10 > 0 ? 1 : 0);
+            } while (result != myAns);
         }
-        function StopEvent(){
-            if(stopEventFlag && confirm("确认后不再出现随机事件且不会显示周围位置信息")){
+
+        function StopEvent() {
+            if (stopEventFlag && confirm("确认后不再出现随机事件且不会显示周围位置信息")) {
                 stopEventFlag = 0;
                 eventFlag = 0;
                 posInfoFlag = 0;
-                for(let i=0;i<divItems.length;i++){
-                    switch(i){
-                        case 1:;
-                        case 3:;
-                        case 5:;
-                        case 7:divItems[i].innerHTML = '0';
+                for (let i = 0; i < divItems.length; i++) {
+                    switch (i) {
+                        case 1:
+                            ;
+                        case 3:
+                            ;
+                        case 5:
+                            ;
+                        case 7:
+                            divItems[i].innerHTML = '0';
                     }
                 }
             }
         }
-        function GetMaxMin(row,col1,col2,max){
+
+        function GetMaxMin(row, col1, col2, max) {
             let store;
-            if(max){
+            if (max) {
                 store = -1;
-            }else{
+            } else {
                 store = Infinity;
             }
-            for(let i=row-1,j=col1-1;j<col2;j++){
-                if(max){
-                    if(items[i*colBase+j].number > store){
-                        store = items[i*colBase+j].number;
+            for (let i = row - 1, j = col1 - 1; j < col2; j++) {
+                if (max) {
+                    if (items[i * colBase + j].number > store) {
+                        store = items[i * colBase + j].number;
                     }
-                }else{
-                    if(items[i*colBase+j].number < store){
-                        store = items[i*colBase+j].number;
+                } else {
+                    if (items[i * colBase + j].number < store) {
+                        store = items[i * colBase + j].number;
                     }
                 }
             }
             return store;
         }
-        function SuperPlus(){
-            let i,j1,j2,result,myAns;
-            let min,max;
+
+        function SuperPlus() {
+            let i, j1, j2, result, myAns;
+            let min, max;
             pageReload = 0;
-            do{
-                if(Reload())
+            do {
+                if (Reload())
                     break;
                 result = 0;
-                i = Math.ceil(Math.random()*colBase);
-                j1 = Math.ceil(Math.random()*colBase);
+                i = Math.ceil(Math.random() * colBase);
+                j1 = Math.ceil(Math.random() * colBase);
                 j2 = colBase;
-                for(let j=j1;j<=j2;j++){
-                        result += items[(i-1)*colBase+j-1].number;
+                for (let j = j1; j <= j2; j++) {
+                    result += items[(i - 1) * colBase + j - 1].number;
                 }
-                console.log(result);//TEST
+                console.log(result); //TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：从${j1}列到${j2}列全部数字相加 = ?`);
-            }while(result != myAns);
+            } while (result != myAns);
         }
-        function Counter(){
-            let i,j,target,result,myAns;
+
+        function Counter() {
+            let i, j, target, result, myAns;
             pageReload = 0;
-            do{
-                if(Reload())
+            do {
+                if (Reload())
                     break;
                 result = 0;
-                i = Math.ceil(Math.random()*colBase);
-                target = items[Math.floor(Math.random()*colBase)].number;
-                for(j=1;j<=colBase;j++){
-                    if(items[(i-1)*colBase+j-1].number == target)
+                i = Math.ceil(Math.random() * colBase);
+                target = items[Math.floor(Math.random() * colBase)].number;
+                for (j = 1; j <= colBase; j++) {
+                    if (items[(i - 1) * colBase + j - 1].number == target)
                         result++;
                 }
-                console.log(result);//TEST
+                console.log(result); //TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：共有多少个 ${target}?`);
-            }while(result != myAns);
+            } while (result != myAns);
         }
-        function MaxMin(){
-            let i,j1,j2,result,myAns,swap;
-            let min,max;
+
+        function MaxMin() {
+            let i, j1, j2, result, myAns, swap;
+            let min, max;
             pageReload = 0;
-            do{
-                if(Reload())
+            do {
+                if (Reload())
                     break;
-                i = Math.ceil(Math.random()*colBase);
-                j1 = Math.ceil(Math.random()*colBase);
+                i = Math.ceil(Math.random() * colBase);
+                j1 = Math.ceil(Math.random() * colBase);
                 j2 = colBase;
                 // if(j1>j2){
                 //     swap = j1;
                 //     j1 = j2;
                 //     j2 = swap;
                 // }
-                max = GetMaxMin(i,j1,j2,1);
-                min = GetMaxMin(i,j1,j2,0);
+                max = GetMaxMin(i, j1, j2, 1);
+                min = GetMaxMin(i, j1, j2, 0);
                 result = max * 10 + min;
-                console.log(result);//TEST
+                console.log(result); //TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：从${j1}列到${j2}列（包含）中最大数 * 10 + 最小数 = ?`);
-            }while(result != myAns);
+            } while (result != myAns);
         }
-        function Multi(){
-            let i,j1,j2,result,myAns;
+
+        function Multi() {
+            let i, j1, j2, result, myAns;
             i = 1;
             pageReload = 0;
-            do{
-                if(Reload())
+            do {
+                if (Reload())
                     break;
-                j1 = Math.ceil(Math.random()*colBase);
-                j2 = Math.ceil(Math.random()*colBase);
-                result = items[(i-1)*colBase+j1-1].number * items[(i-1)*colBase+j2-1].number;
-                console.log(result);//TEST
+                j1 = Math.ceil(Math.random() * colBase);
+                j2 = Math.ceil(Math.random() * colBase);
+                result = items[(i - 1) * colBase + j1 - 1].number * items[(i - 1) * colBase + j2 - 1].number;
+                console.log(result); //TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：第${j1}列 * 第${j2}列 = ?`);
-            }while(result != myAns);
+            } while (result != myAns);
         }
-        function Plus(){
-            let i,j1,j2,result,myAns;
+
+        function Plus() {
+            let i, j1, j2, result, myAns;
             i = 1;
             pageReload = 0;
-            do{
-                if(Reload())
+            do {
+                if (Reload())
                     break;
-                j1 = Math.ceil(Math.random()*colBase);
-                j2 = Math.ceil(Math.random()*colBase);
-                result = items[(i-1)*colBase+j1-1].number + items[(i-1)*colBase+j2-1].number;
-                console.log(result);//TEST
+                j1 = Math.ceil(Math.random() * colBase);
+                j2 = Math.ceil(Math.random() * colBase);
+                result = items[(i - 1) * colBase + j1 - 1].number + items[(i - 1) * colBase + j2 - 1].number;
+                console.log(result); //TEST
                 myAns = window.prompt(`突发事件：\n第${i}行：第${j1}列 + 第${j2}列 = ?`);
-            }while(result != myAns);
+            } while (result != myAns);
         }
-        function GetGameTime(){
-            return Math.floor((Date.now()-startTime)/1000);
+
+        function GetGameTime() {
+            return Math.floor((Date.now() - startTime) / 1000);
         }
-        function ShowTime(){
-            if(divItems.length == 9)
+
+        function ShowTime() {
+            if (divItems.length == 9)
                 divItems[2].innerHTML = `${Math.floor((Date.now()-startTime)/1000)}`;
         }
-        function RandomEvent(){
-            if(position != targetPos && eventFlag){
-                let eventNum = Math.floor(Math.random()*9);
-                switch(eventNum){
-                    case 0:{Plus();break;}
-                    case 1:{Multi();break;}
-                    case 2:{MaxMin();break;}
-                    case 3:{Counter();break;}
-                    case 4:{SuperPlus();break;}
-                    case 5:{Binary();break;}
+
+        function RandomEvent() {
+            if (position != targetPos && eventFlag) {
+                let eventNum = Math.floor(Math.random() * 9);
+                switch (eventNum) {
+                    case 0: {
+                        Plus();
+                        break;
+                    }
+                    case 1: {
+                        Multi();
+                        break;
+                    }
+                    case 2: {
+                        MaxMin();
+                        break;
+                    }
+                    case 3: {
+                        Counter();
+                        break;
+                    }
+                    case 4: {
+                        SuperPlus();
+                        break;
+                    }
+                    case 5: {
+                        Binary();
+                        break;
+                    }
                 }
             }
         }
-        function ShowRoute(){
-            if(route.length >= 0){
-                for(let i=0;i<route.length-1;i++){
+
+        function ShowRoute() {
+            if (route.length >= 0) {
+                for (let i = 0; i < route.length - 1; i++) {
                     divItems[route[i]].style.backgroundColor = "white";
                     divItems[route[i]].innerHTML = ``;
                 }
-                for(let i=0;i<route.length-1;i++){
-                    setTimeout(()=>{
-                        if(divItems[route[i]].innerHTML == ''){
+                for (let i = 0; i < route.length - 1; i++) {
+                    setTimeout(() => {
+                        if (divItems[route[i]].innerHTML == '') {
                             divItems[route[i]].innerHTML = `🚩${i}`;
-                        }else{
+                        } else {
                             divItems[route[i]].innerHTML += `,${i}`;
                         }
-                    },100);
+                    }, 100);
                 }
             }
-            if(route[route.length-1]*1.0 == targetPos){
-                step = route.length-1;
+            if (route[route.length - 1] * 1.0 == targetPos) {
+                step = route.length - 1;
                 ShowBanner();
             }
         }
-        function ShowBanner(){
-            if(showFlag){
+
+        function ShowBanner() {
+            if (showFlag) {
                 divBanner.style.visibility = "visible";
                 divBanner.style.opacity = 1;
             }
-            setTimeout(()=>{
-                if(showFlag){
+            setTimeout(() => {
+                if (showFlag) {
                     showFlag = 0;
                     divBanner.style.visibility = "hidden";
                     divBanner.style.opacity = 0;
-                    if(copyTool.value != ""){
+                    if (copyTool.value != "") {
                         document.execCommand("copy");
                         copyTool.hidden = true;
                     }
@@ -320,11 +362,11 @@
                     divItems[targetPos].style.backgroundColor = "white";
                     ShowRoute();
                 }
-            },2000);
+            }, 2000);
         }
 
-        function Success(){
-            if(position == targetPos){
+        function Success() {
+            if (position == targetPos) {
                 completeTime = GetGameTime();
                 ShowBanner();
                 copyTool.hidden = false;
@@ -332,51 +374,84 @@
                 copyTool.select();
             }
         }
-        function GetInfo(position,row,l_t){
-            let i,j;
-            i = Math.floor(position/colBase);
-            j = position%colBase;
-            if(row){
-                if(l_t){
+
+        function GetInfo(position, row, l_t) {
+            let i, j;
+            i = Math.floor(position / colBase);
+            j = position % colBase;
+            if (row) {
+                if (l_t) {
                     j -= 1;
-                }else{
+                } else {
                     j += 1;
                 }
-            }else{
-                if(l_t){
+            } else {
+                if (l_t) {
                     i -= 1;
-                }else{
+                } else {
                     i += 1;
                 }
             }
-            return (i+num)%num*colBase+((j+colBase)%colBase);
+            return (i + num) % num * colBase + ((j + colBase) % colBase);
         }
-        function Maze(){
+
+        function Maze() {
             let nextPos = -1;
-            for(let i=1;i<=9;i++){
+            for (let i = 1; i <= 9; i++) {
                 div = document.createElement("div");
                 div.className = "maze";
-                switch(i){
-                    case 1:{div.innerHTML = `目 标：${Math.floor(targetPos/colBase)+1}行 ${targetPos%colBase+1}列`;div.style.fontSize = "1.5em";div.style.color = "white";break;}
-                    case 3:{div.innerHTML = `0`;div.style.fontSize = "1.5em";div.style.color = "white";break;};
-                    case 9:{div.onclick = StopEvent.bind(div);div.innerHTML = `我已定位`;div.style.fontSize = "1.5em";div.style.color = "#33141e";break;};
-                    case 5:{div.setAttribute("index",position);};
-                    case 2:{div.onclick = EventForP2.bind(div,0);break;};
-                    case 4:{div.onclick = EventForP2.bind(div,1);break;};
-                    case 6:{div.onclick = EventForP2.bind(div,2);break;};
-                    case 8:{div.onclick = EventForP2.bind(div,3);break;};
+                switch (i) {
+                    case 1: {
+                        div.innerHTML = `目 标：${Math.floor(targetPos/colBase)+1}行 ${targetPos%colBase+1}列`;
+                        div.style.fontSize = "1.5em";
+                        div.style.color = "white";
+                        break;
+                    }
+                    case 3: {
+                        div.innerHTML = `0`;
+                        div.style.fontSize = "1.5em";
+                        div.style.color = "white";
+                        break;
+                    };
+                case 9: {
+                    div.onclick = StopEvent.bind(div);
+                    div.innerHTML = `我已定位`;
+                    div.style.fontSize = "1.5em";
+                    div.style.color = "#33141e";
+                    break;
+                };
+                case 5: {
+                    div.setAttribute("index", position);
+                };
+                case 2: {
+                    div.onclick = EventForP2.bind(div, 0);
+                    break;
+                };
+                case 4: {
+                    div.onclick = EventForP2.bind(div, 1);
+                    break;
+                };
+                case 6: {
+                    div.onclick = EventForP2.bind(div, 2);
+                    break;
+                };
+                case 8: {
+                    div.onclick = EventForP2.bind(div, 3);
+                    break;
+                };
                 }
                 myBody.appendChild(div);
                 divItems.push(div);
             }
-            divItems[4].innerHTML = "起点："+items[4].number;
+            divItems[4].innerHTML = "起点：" + items[4].number;
             divItems[4].click();
         }
-        function Map(){
-            for(let i=0;i<items.length;i++){
+
+        function Map() {
+            for (let i = 0; i < items.length; i++) {
                 div = document.createElement("div");
                 div.className = "unit";
-                div.setAttribute("index",i);
+                div.setAttribute("index", i);
                 div.innerHTML = items[i].number;
                 div.onclick = EventForP1.bind(div);
                 myBody.appendChild(div);
@@ -384,124 +459,152 @@
             }
             Dry();
         }
-        function EventForP2(dirNum){
+
+        function EventForP2(dirNum) {
             let nextPos = -1;
-			let setFlag = 0;
-            position = this.getAttribute("index")*1.0;
-            if(!posInfoFlag && this != divItems[4]){
+            let setFlag = 0;
+            position = this.getAttribute("index") * 1.0;
+            if (!posInfoFlag && this != divItems[4]) {
                 this.innerHTML = ++direction[dirNum];
             }
-            for(let i=1;i<=9;i++){
-                switch(i){
-                    case 2:{setFlag = 1;nextPos = GetInfo(position,0,1);break;};
-                    case 4:{nextPos = GetInfo(position,1,1);break;};
-                    case 5:{nextPos = position;break;};
-                    case 6:{nextPos = GetInfo(position,1,0);break;};
-                    case 8:{setFlag = 1;nextPos = GetInfo(position,0,0);break;};
+            for (let i = 1; i <= 9; i++) {
+                switch (i) {
+                    case 2: {
+                        setFlag = 1;
+                        nextPos = GetInfo(position, 0, 1);
+                        break;
+                    };
+                case 4: {
+                    nextPos = GetInfo(position, 1, 1);
+                    break;
+                };
+                case 5: {
+                    nextPos = position;
+                    break;
+                };
+                case 6: {
+                    nextPos = GetInfo(position, 1, 0);
+                    break;
+                };
+                case 8: {
+                    // setFlag = 1;
+                    nextPos = GetInfo(position, 0, 0);
+                    break;
+                };
                 }
-                if(nextPos != -1){
-                    if(setFlag){
-                        if(posInfoFlag){
-                            divItems[i-1].innerHTML = GetMsg(items[nextPos].number);
+                if (nextPos != -1) {
+                    if (setFlag) {
+                        if (posInfoFlag) {
+                            divItems[i - 1].innerHTML = GetMsg(items[nextPos].number);
                         }
                         setFlag = 0;
                     }
-                    divItems[i-1].setAttribute("index",nextPos);
+                    divItems[i - 1].setAttribute("index", nextPos);
                     nextPos = -1;
                 }
             }
             step++;
             route.push(position);
-            if(step > 0){
+            if (step > 0) {
                 RandomEvent();
             }
             Success();
-            if( this == divItems[4]){//中间不可点击
+            if (this == divItems[4]) { //中间不可点击
                 this.onclick = null;
             }
         }
-        function EventForP1(){
+
+        function EventForP1() {
             let index = this.getAttribute("index");
-            if(this.getAttribute("index")*1.0 == flag){
+            if (this.getAttribute("index") * 1.0 == flag) {
                 completeTime = GetGameTime();
                 route = window.prompt("已抵达摘星地点？").split(",");
                 ShowRoute();
                 return 0;
             }
-            if(items[index].state == 0){
+            if (items[index].state == 0) {
                 items[index].state = 1;
                 this.style.backgroundColor = "gold";
                 this.innerHTML += '🚩';
-            }else{
+            } else {
                 items[index].state = 0;
                 this.style.backgroundColor = colors[items[index].number];
                 this.innerHTML = items[index].number;
             }
         }
-        function GetRandom(offset){
+
+        function GetRandom(offset) {
             let my_random_num = 0;
             // my_random_num = Math.floor(Date.now()/2400) * 9301 + 49297 % 233280;
-            my_random_num = Math.floor(Date.now()/1000) * 9301 + 49297 % 233280;
+            my_random_num = Math.floor(Date.now() / 1000) * 9301 + 49297 % 233280;
             my_random_num = my_random_num / 233280;
             my_random_num = Math.floor(my_random_num % 100);
-            my_random_num = Math.pow(my_random_num+offset,2);
-            if(tag == -1)
+            my_random_num = Math.pow(my_random_num + offset, 2);
+            if (tag == -1)
                 // tag = (my_random_num%10 + Math.floor(my_random_num/10%10)+Math.floor(my_random_num/100%10)+Math.floor(my_random_num/1000%10))%10;
                 tag = my_random_num;
-            return (my_random_num%10 + Math.floor(my_random_num/10%10)+Math.floor(my_random_num/100%10)+Math.floor(my_random_num/1000%10))%10;
+            return (my_random_num % 10 + Math.floor(my_random_num / 10 % 10) + Math.floor(my_random_num / 100 % 10) +
+                Math.floor(my_random_num / 1000 % 10)) % 10;
         }
-        function CreateItems(){
-            if(divItems != null)
-				myBody.innerHTML = "";
-			divItems = [];
-            for(i=1;i<=20;i++){
-                for(j=1;j<=num;j++){
-                    let ran = GetRandom(i*20+j);
-                    items.push({number:ran,state:0});
+
+        function CreateItems() {
+            if (divItems != null)
+                myBody.innerHTML = "";
+            divItems = [];
+            for (i = 1; i <= colBase; i++) {
+                for (j = 1; j <= num; j++) {
+                    let ran = GetRandom(i * 20 + j);
+                    items.push({
+                        number: ran,
+                        state: 0
+                    });
                 }
             }
         }
-        function Dry(){
-            let i,j,index;
+
+        function Dry() {
+            let i, j, index;
             let div;
             let divItems = myBody.getElementsByClassName("unit");
-            for(i=1;i<=20;i++){
-                for(j=1;j<=num;j++){
-                    index = (i-1)*20+j-1;
+            for (i = 1; i <= colBase; i++) {
+                for (j = 1; j <= num; j++) {
+                    index = (i - 1) * colBase + j - 1;
                     div = divItems[index];
-                    div.style.backgroundColor = colors[div.innerHTML*1.0];
+                    div.style.backgroundColor = colors[div.innerHTML * 1.0];
                 }
             }
         }
-        function Menu(){
-            if(window.confirm(`当前地图号：${tag}\n请确认与另一位玩家一致后确认`)){
+
+        function Menu() {
+            if (window.confirm(`当前地图号：${tag}\n请确认与另一位玩家一致后确认`)) {
                 let opt = window.confirm(`当前地图号：${tag}\n确定选择地图，取消选择走迷宫`);
-                if(opt == true){
-                    let row,col;
+                if (opt == true) {
+                    let row, col;
                     Map();
                     pageReload = 3;
-                    do{
-                        if(Reload())
+                    do {
+                        if (Reload())
                             break;
-                        row = window.prompt("目的地行号：")*1.0;
-                        col = window.prompt("目的地列号：")*1.0;
+                        row = window.prompt("目的地行号：") * 1.0;
+                        col = window.prompt("目的地列号：") * 1.0;
                         // row = 1;//TEST
                         // col = 1;
-                    }while(row<1||row>num||col<1||col>20);
-                    flag = (row-1)*20+col-1;
+                    } while (row < 1 || row > num || col < 1 || col > colBase);
+                    flag = (row - 1) * colBase + col - 1;
                     targetPos = flag;
-                    divItems[flag].innerHTML = "⭐";
+                    divItems[flag].innerHTML = "⭐"+items[flag].number;
                     divItems[flag].style.backgroundColor = "white";
-                }else{
+                } else {
                     Maze();
                     setInterval(ShowTime, 1000);
                 }
-            }else{
+            } else {
                 location.reload();
             }
         }
-    CreateItems();
-    Menu();
+        CreateItems();
+        Menu();
     </script>
 </body>
+
 </html>
