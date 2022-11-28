@@ -368,6 +368,7 @@
                 myBody.appendChild(div);
                 divItems.push(div);
             }
+            divItems[4].innerHTML = "起点："+items[4].number;
             divItems[4].click();
         }
         function Map(){
@@ -410,9 +411,13 @@
             }
             step++;
             route.push(position);
-            if(step > 0)
+            if(step > 0){
                 RandomEvent();
+            }
             Success();
+            if( this == divItems[4]){//中间不可点击
+                this.onclick = null;
+            }
         }
         function EventForP1(){
             let index = this.getAttribute("index");
@@ -468,31 +473,34 @@
             }
         }
         function Menu(){
-            let opt = window.confirm(`当前地图号：${tag}\n确定选择地图，取消选择走迷宫`);
-            if(opt == true){
-                let row,col;
-                Map();
-                pageReload = 3;
-                do{
-                    if(Reload())
-                        break;
-                    // row = window.prompt("目的地行号：")*1.0;
-                    // col = window.prompt("目的地列号：")*1.0;
-                    row = 1;//TEST
-                    col = 1;
-                }while(row<1||row>num||col<1||col>20);
-                flag = (row-1)*20+col-1;
-                targetPos = flag;
-                divItems[flag].innerHTML = "⭐";
-                divItems[flag].style.backgroundColor = "white";
+            if(window.confirm(`当前地图号：${tag}\n请确认与另一位玩家一致后确认`)){
+                let opt = window.confirm(`当前地图号：${tag}\n确定选择地图，取消选择走迷宫`);
+                if(opt == true){
+                    let row,col;
+                    Map();
+                    pageReload = 3;
+                    do{
+                        if(Reload())
+                            break;
+                        row = window.prompt("目的地行号：")*1.0;
+                        col = window.prompt("目的地列号：")*1.0;
+                        // row = 1;//TEST
+                        // col = 1;
+                    }while(row<1||row>num||col<1||col>20);
+                    flag = (row-1)*20+col-1;
+                    targetPos = flag;
+                    divItems[flag].innerHTML = "⭐";
+                    divItems[flag].style.backgroundColor = "white";
+                }else{
+                    Maze();
+                    setInterval(ShowTime, 1000);
+                }
             }else{
-                Maze();
-                setInterval(ShowTime, 1000);
+                location.reload();
             }
         }
     CreateItems();
     Menu();
-    
     </script>
 </body>
 </html>
