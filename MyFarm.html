@@ -1027,6 +1027,7 @@ function SelectEmployee(btn){
 	let realWeather = '';
 	function GetRealWeather(data){
 		let arr = data.weather;
+		realLoca = data.city；
 		realWeather = data.city+"："+arr[0].weather;
 		if(realWeather.length>7){
 			realWeather = realWeather.split('转')[0];
