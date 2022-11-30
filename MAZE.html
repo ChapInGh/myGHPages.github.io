@@ -443,7 +443,6 @@
                 myBody.appendChild(div);
                 divItems.push(div);
             }
-            divItems[4].innerHTML = "起点：" + items[4].number;
             divItems[4].click();
         }
 
@@ -510,6 +509,7 @@
             }
             Success();
             if (this == divItems[4]) { //中间不可点击
+                this.innerHTML = "起点：" + items[position].number;
                 this.onclick = null;
             }
         }
