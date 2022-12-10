@@ -52,14 +52,14 @@
             height: 30%;
             width: 100%;
             background: gold;
-            opacity: 1;
+            opacity: 0;
+			visibility :hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 3em;
             color: red;
             box-shadow: 0 0 10px gold;
-            visibility: hidden;
             transition: opacity 2s;
         }
 
@@ -107,6 +107,10 @@
         let stopEventFlag = 1;
         let pageReload = 0;
 
+        function ShowStep() {
+            if (divItems.length == 9)
+                divItems[6].innerHTML = `步数：${step}`;
+        }
         function GetMsg(num) {
             let msg = "";
             if (num <= 4) {
@@ -342,14 +346,14 @@
 
         function ShowBanner() {
             if (showFlag) {
-                divBanner.style.visibility = "visible";
+				divBanner.style.visibility = "visible";
                 divBanner.style.opacity = 1;
             }
             setTimeout(() => {
                 if (showFlag) {
                     showFlag = 0;
-                    divBanner.style.visibility = "hidden";
-                    divBanner.style.opacity = 0;
+					divBanner.style.visibility = "visible";
+					divBanner.style.opacity = 0;
                     if (copyTool.value != "") {
                         document.execCommand("copy");
                         copyTool.hidden = true;
@@ -504,6 +508,7 @@
             }
             step++;
             route.push(position);
+            ShowStep();
             if (step > 0) {
                 RandomEvent();
             }
