@@ -405,7 +405,11 @@ let employees = [];
 let player;
 let selectFlag = 0;
 let employeeFlagForIntvl = 1;
-
+// 颜色常量
+let green = "green";
+let gold = "gold";
+let red = "red";
+let yellow = "yellow";
 
 function getPos(event){
     let pos;
@@ -419,7 +423,7 @@ function getPos(event){
 function getRGBA(){
     return `rgba(${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},1)`;
 }
-function showTip(tip){
+function showTip(tip,color){
     let heart = document.createElement("span");
     let pos = getPos();
 	if(pos === -1)
@@ -428,7 +432,9 @@ function showTip(tip){
     //heart.innerText = "♥";
     heart.innerText = tip;
 	heart.classList.add("tip");
-    heart.style.color = getRGBA();
+    //heart.style.color = getRGBA();
+	color = color == undefined ? getRGBA() : color;
+	heart.style.color = color;
     heart.style.left = heart.offsetLeft + pos.X - 5 + "px";
     heart.style.top = posY + "px";
     document.body.appendChild(heart);
@@ -566,13 +572,13 @@ function InitGame(){
 function UpdateMoney(num){
     player.money += num;
     if(num>0){
-	showTip("货币+"+num);
+	showTip("货币+"+num,gold);
     }
     displayPlayer();
 }
 function GetSkillValue(num){
     player.skillValue = player.skillValue + num;
-    showTip("技巧+"+num);
+    showTip("技巧+"+num,green);
     while(player.skillValue >= 100 + Math.floor(Math.pow(player.grade*10,2))){
         player.grade += 1;
         for(let i=0;i<crops.length;i++){
