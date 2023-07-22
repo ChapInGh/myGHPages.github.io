@@ -416,9 +416,9 @@ function getPos(event){
 function getRGBA(){
     return `rgba(${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},1)`;
 }
-function showTip(tip){
+function showTip(event,tip){
     let heart = document.createElement("span");
-    let pos = getPos();
+    let pos = getPos(event);
     let posY = heart.offsetTop +  pos.Y - 15;
     //heart.innerText = "♥";
     heart.innerText = tip;
@@ -558,16 +558,16 @@ function InitGame(){
     GetSkillValue(0);
     WhatIsTheWeatherLike();
 }
-function UpdateMoney(num){
+function UpdateMoney(event,num){
     player.money += num;
     if(num>0){
-	showTip("货币+"+num);
+	showTip(event,"货币+"+num);
     }
     displayPlayer();
 }
-function GetSkillValue(num){
+function GetSkillValue(event,num){
     player.skillValue = player.skillValue + num;
-    showTip("技巧+"+num);
+    showTip(event,"技巧+"+num);
     while(player.skillValue >= 100 + Math.floor(Math.pow(player.grade*10,2))){
         player.grade += 1;
         for(let i=0;i<crops.length;i++){
