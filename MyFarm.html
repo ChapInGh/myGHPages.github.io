@@ -150,14 +150,14 @@
         }
         span.tip{
 	    position : absolute;
-	    font-size : .8em;
+	    font-size : 1.5em;
 	    transition: 1s;
 	    transition-property: opacity;
 	}
     </style>
     <title>我的农场</title>
 </head>
-<body>
+<body >
     <input type="text" id="GameStore">
     <div id="container">
         <div id="head">
@@ -406,9 +406,12 @@ let player;
 let selectFlag = 0;
 let employeeFlagForIntvl = 1;
 
+
 function getPos(event){
     let pos;
     event = window.event || event;
+	if(event == undefined)
+		return -1;
     pos = {X:event.pageX || (event.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)),
     Y:event.pageY || (event.clientY + (document.documentElement.scrollTop || document.body.scrollTop))};
     return pos;
@@ -416,18 +419,20 @@ function getPos(event){
 function getRGBA(){
     return `rgba(${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},1)`;
 }
-function showTip(event,tip){
+function showTip(tip){
     let heart = document.createElement("span");
-    let pos = getPos(event);
+    let pos = getPos();
+	if(pos === -1)
+		return ;
     let posY = heart.offsetTop +  pos.Y - 15;
     //heart.innerText = "♥";
     heart.innerText = tip;
-	heart.classList.add("heart");
+	heart.classList.add("tip");
     heart.style.color = getRGBA();
     heart.style.left = heart.offsetLeft + pos.X - 5 + "px";
     heart.style.top = posY + "px";
     document.body.appendChild(heart);
-    let interv = setInterval(function a(){
+	let interv = setInterval(function a(){
         this.style.opacity = 0;
         posY -= 5;
         this.style.top = posY + "px";
@@ -558,16 +563,16 @@ function InitGame(){
     GetSkillValue(0);
     WhatIsTheWeatherLike();
 }
-function UpdateMoney(num,event){
+function UpdateMoney(num){
     player.money += num;
     if(num>0){
-	showTip(event,"货币+"+num);
+	showTip("货币+"+num);
     }
     displayPlayer();
 }
-function GetSkillValue(num,event){
+function GetSkillValue(num){
     player.skillValue = player.skillValue + num;
-    showTip(event,"技巧+"+num);
+    showTip("技巧+"+num);
     while(player.skillValue >= 100 + Math.floor(Math.pow(player.grade*10,2))){
         player.grade += 1;
         for(let i=0;i<crops.length;i++){
