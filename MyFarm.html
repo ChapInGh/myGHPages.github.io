@@ -148,6 +148,12 @@
             display: block;
             margin-bottom: 10px;
         }
+        span.tip{
+	    position : absolute;
+	    font-size : .8em;
+	    transition: 1s;
+	    transition-property: opacity;
+	}
     </style>
     <title>我的农场</title>
 </head>
@@ -524,10 +530,14 @@ function InitGame(){
 }
 function UpdateMoney(num){
     player.money += num;
+    if(num>0){
+	showTip("货币+"+num);
+    }
     displayPlayer();
 }
 function GetSkillValue(num){
     player.skillValue = player.skillValue + num;
+    showTip("技巧+"+num);
     while(player.skillValue >= 100 + Math.floor(Math.pow(player.grade*10,2))){
         player.grade += 1;
         for(let i=0;i<crops.length;i++){
@@ -1049,6 +1059,38 @@ function SelectEmployee(btn){
         UpdateWeather();
     }
     window.onload = UpdateWeather;
+
+function getPos(event){
+    let pos;
+    event = window.event || event;
+    pos = {X:event.pageX || (event.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)),
+    Y:event.pageY || (event.clientY + (document.documentElement.scrollTop || document.body.scrollTop))};
+    return pos;
+}
+function getRGBA(){
+    return `rgba(${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},${Math.ceil(Math.random()*256)},1)`;
+}
+function showTip(tip){
+    let heart = document.createElement("span");
+    let pos = getPos();
+    let posY = heart.offsetTop +  pos.Y - 15;
+    //heart.innerText = "♥";
+    heart.innerText = tip;
+	heart.classList.add("heart");
+    heart.style.color = getRGBA();
+    heart.style.left = heart.offsetLeft + pos.X - 5 + "px";
+    heart.style.top = posY + "px";
+    document.body.appendChild(heart);
+    let interv = setInterval(function a(){
+        this.style.opacity = 0;
+        posY -= 5;
+        this.style.top = posY + "px";
+    }.bind(heart), 50);
+    setTimeout(function cleana(){
+        clearInterval(this[0]);
+        document.body.removeChild(this[1]);
+    }.bind([interv,heart]), 500);
+}
     </script>
     </body>
 </html>
