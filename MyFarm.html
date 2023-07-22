@@ -558,14 +558,14 @@ function InitGame(){
     GetSkillValue(0);
     WhatIsTheWeatherLike();
 }
-function UpdateMoney(event,num){
+function UpdateMoney(num,event){
     player.money += num;
     if(num>0){
 	showTip(event,"货币+"+num);
     }
     displayPlayer();
 }
-function GetSkillValue(event,num){
+function GetSkillValue(num,event){
     player.skillValue = player.skillValue + num;
     showTip(event,"技巧+"+num);
     while(player.skillValue >= 100 + Math.floor(Math.pow(player.grade*10,2))){
