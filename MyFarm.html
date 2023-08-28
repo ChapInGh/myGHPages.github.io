@@ -121,6 +121,10 @@
         div#body div span{
             text-align:center
         }
+	    div#body div progress {
+            margin-left: auto;
+            margin-right: auto;
+        }
         #GameStore{
             position: absolute;
             top: -100px;
@@ -513,7 +517,17 @@ function displaySoils(){
                 let mature = crops[soils[i].planted].matureTime - (Date.now()-soils[i].plantedTime)/1000/60;
                 Msg(i,`种植：${crops[soils[i].planted].cropName}`);
                 if(!soils[i].isDying() && mature > 0)//TEXT 0->6
-                    Msg(i, `成熟：${Math.ceil(mature)}分钟 季:${soils[i].harvestedTimes+1}/${crops[soils[i].planted].maxHarvestTimes}`);
+                    {
+                            Msg(i, `努力生长：${Math.ceil(mature)}分钟 季:${soils[i].harvestedTimes + 1}/${crops[soils[i].planted].maxHarvestTimes}`);
+                            let progress = document.createElement("progress");
+                            progress.setAttribute("value", crops[soils[i].planted].matureTime - Math.ceil(mature));
+                            progress.setAttribute("max", crops[soils[i].planted].matureTime);
+
+                            let body = document.querySelector("body div#body");
+                            let divs = body.querySelectorAll("div");
+                            divs[i].appendChild(progress);
+
+                        }
                 else if(soils[i].isDying()){
                     Msg(i,`已枯萎`);
                 }else{
