@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+  <title>水果机</title>
+  <style>
+    body,
+    .row {
+      background-color: black;
+    }
+
+    img {
+      width: 100%;
+    }
+
+    [class*="col-"] {
+      padding: 1px;
+    }
+
+    .panel [class*="col-"] {
+      box-sizing: border-box;
+      border: 3px solid gold;
+    }
+
+    .option img {
+      width: 70%;
+      margin-left: 15%;
+    }
+
+    .stake {
+      /* color: chocolate; */
+      color: red;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.5em;
+    }
+
+    div.score {
+      color: gold;
+      font-size: 2em;
+      box-sizing: border-box;
+      border: 1px solid gold;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <audio class="result" src="https://fanyi.baidu.com/gettts?lan=zh&text=你好&spd=5&source=web"></audio>
+  <audio loop="loop" class="panel-start"
+    src="https://s1.aigei.com/src/aud/mp3/3f/3fe68cb566f348be97cac13d74e01c09.mp3?e=1693848480&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:SHoy1Yn9Iu3pczag5ieErb3Vl_U="></audio>
+  <div class="container">
+    <div class="row" style="height: 3em;">
+      <div class="btn btn-primary col-md-1 col-xs-1 col-md-offset-11 col-xs-offset-11"
+        onclick="audioHelper.muteOrNot(this);">🔊</div>
+    </div>
+    <div class="row panel">
+
+
+      <div class="row ">
+        <div class="col-md-1 col-xs-1 col-xs-offset-2 col-md-offset-2 " order-0>
+          <img src="https://s1.ax1x.com/2023/09/04/pPDvb26.png" alt="橘子10">
+        </div>
+        <div class="col-md-1 col-xs-1" order-1><img src="https://s1.ax1x.com/2023/09/04/pPDvxVH.png" alt="铃铛10"></div>
+        <div class="col-md-1 col-xs-1" order-2><img src="https://s1.ax1x.com/2023/09/04/pPDvXrD.png" alt="bar25"></div>
+        <div class="col-md-1 col-xs-1" order-3><img src="https://s1.ax1x.com/2023/09/04/pPDvOKO.png" alt="bar50"></div>
+        <div class="col-md-1 col-xs-1" order-4><img src="https://s1.ax1x.com/2023/09/04/pPrp5y6.png" alt="苹果5"></div>
+        <div class="col-md-1 col-xs-1" order-5><img src="https://s1.ax1x.com/2023/09/04/pPrpIOK.png" alt="苹果2"></div>
+        <div class="col-md-1 col-xs-1" order-6><img src="https://s1.ax1x.com/2023/09/04/pPDx9PI.png" alt="柠檬10"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-1 col-xs-1  col-xs-offset-2 col-md-offset-2" order-21><img
+            src="https://s1.ax1x.com/2023/09/04/pPDvqxK.png" alt="铃铛2">
+        </div>
+        <div class="col-md-1 col-xs-1 col-xs-offset-5 col-md-offset-5" order-7><img
+            src="https://s1.ax1x.com/2023/09/04/pPrpHTe.png" alt="西瓜10">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1 col-xs-1  col-xs-offset-2 col-md-offset-2" order-20><img
+            src="https://s1.ax1x.com/2023/09/04/pPrp5y6.png" alt="苹果5">
+        </div>
+        <div class="col-md-2 col-xs-2 score scoreLeft">999</div>
+        <div class="col-md-2 col-xs-2 col-xs-offset-1 col-md-offset-1 score scoreRight">888</div>
+        <div class="col-md-1 col-xs-1" order-8><img src="https://s1.ax1x.com/2023/09/04/pPrpTeO.png" alt="西瓜2"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-1 col-xs-1  col-xs-offset-2 col-md-offset-2" order-19><img
+            src="https://s1.ax1x.com/2023/09/04/pPrphS1.png" alt="双星2">
+        </div>
+        <div class="col-md-1 col-xs-1 col-xs-offset-5 col-md-offset-5" order-9><img
+            src="https://s1.ax1x.com/2023/09/04/pPrp5y6.png" alt="苹果5">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1 col-xs-1  col-xs-offset-2 col-md-offset-2" order-18><img
+            src="https://s1.ax1x.com/2023/09/04/pPrp7wD.png" alt="双星20">
+        </div>
+        <div class="col-md-1 col-xs-1 col-xs-offset-5 col-md-offset-5" order-10><img
+            src="https://s1.ax1x.com/2023/09/04/pPDvH8x.png" alt="橘子2">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1 col-xs-1 col-xs-offset-2 col-md-offset-2" order-17><img
+            src="https://s1.ax1x.com/2023/09/04/pPDx9PI.png" alt="柠檬10">
+        </div>
+        <div class="col-md-1 col-xs-1" order-16><img src="https://s1.ax1x.com/2023/09/04/pPDvjqe.png" alt="柠檬2"></div>
+        <div class="col-md-1 col-xs-1" order-15><img src="https://s1.ax1x.com/2023/09/04/pPrp5y6.png" alt="苹果5"></div>
+        <div class="col-md-1 col-xs-1" order-14><img src="https://s1.ax1x.com/2023/09/04/pPrp4Qx.png" alt="双七20"></div>
+        <div class="col-md-1 col-xs-1" order-13><img src="https://s1.ax1x.com/2023/09/04/pPrpWWR.png" alt="双七2"></div>
+        <div class="col-md-1 col-xs-1" order-12><img src="https://s1.ax1x.com/2023/09/04/pPDvxVH.png" alt="铃铛10"></div>
+        <div class="col-md-1 col-xs-1" order-11><img src="https://s1.ax1x.com/2023/09/04/pPDvb26.png" alt="橘子10"></div>
+      </div>
+    </div>
+
+    <div class="row option">
+      <div class="row stake">
+        <div class="col-md-1 col-xs-1 col-xs-offset-1 col-md-offset-1">0</div>
+        <div class="col-md-1 col-xs-1">0</div>
+        <div class="col-md-1 col-xs-1">0</div>
+        <div class="col-md-1 col-xs-1">0</div>
+        <div class="col-md-1 col-xs-1">0</div>
+        <div class="col-md-1 col-xs-1">0</div>
+        <div class="col-md-1 col-xs-1">0</div>
+        <div class="col-md-1 col-xs-1">0</div>
+        <div class="col-md-2 col-xs-2"><button class="btn btn-warning"
+            style="width: 100%;font-weight: 600; font-size: 1em;padding:0;" onclick="resetStakes();">重置</button></div>
+
+      </div>
+      <div class="row button">
+        <div class="col-md-1 col-xs-1 col-xs-offset-1 col-md-offset-1"><img
+            src="https://s1.ax1x.com/2023/09/04/pPDvzad.png" alt=""></div>
+        <div class="col-md-1 col-xs-1"><img src="https://s1.ax1x.com/2023/09/04/pPDxkM8.png" alt=""></div>
+        <div class="col-md-1 col-xs-1"><img src="https://s1.ax1x.com/2023/09/04/pPDxAsS.png" alt=""></div>
+        <div class="col-md-1 col-xs-1"><img src="https://s1.ax1x.com/2023/09/04/pPDxEqg.png" alt=""></div>
+        <div class="col-md-1 col-xs-1"><img src="https://s1.ax1x.com/2023/09/04/pPDxPRP.png" alt=""></div>
+        <div class="col-md-1 col-xs-1"><img src="https://s1.ax1x.com/2023/09/04/pPDxCGt.png" alt=""></div>
+        <div class="col-md-1 col-xs-1"><img src="https://s1.ax1x.com/2023/09/04/pPDxSIA.png" alt=""></div>
+        <div class="col-md-1 col-xs-1"><img src="https://s1.ax1x.com/2023/09/04/pPDxixf.png" alt=""></div>
+        <div class="col-md-2 col-xs-2"><button class="btn btn-success"
+            style="width: 100%;font-weight: 600; font-size: 1.5em;padding:0;" onclick="startPanel(3)">开始</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let panelLightNum = 22;
+    let options = [];
+    let startBtn;
+    let stakes = [];
+    let panelItems = [];
+    let specificForPanelItem = [];
+    let startFlag = false;
+    let player = {};
+    let startedFlag = false;
+    let lastNum = 0;
+    let audioResult;
+    let audioStart;
+
+    let audioHelper = {
+      "muted": false,
+      "pauseAndReset": function (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }, "changeRate": function (audio, rate) {
+        if (audio.playbackRate != rate)
+          audio.playbackRate = rate;
+      }, "muteOrNot": function (event) {
+        let not = "🔊";
+        let mute = "🔇";
+        if (this.muted) {
+          this.muted = false;
+          event.innerText = not;
+          this.unmute()
+        } else {
+          this.muted = true;
+          event.innerText = mute;
+          this.mute();
+        }
+      },
+      "unmute": () => {
+        audioResult.volume = 1;
+        audioStart.volume = 1;
+      },
+      "mute": () => {
+        audioResult.volume = 0;
+        audioStart.volume = 0;
+      }
+    };
+    function pannelShowLight(index) {
+      index += panelLightNum;
+      let now = index % panelLightNum;
+      let previous = (index - 1) % panelLightNum;
+      panelItems[now].style.borderColor = "red";
+      panelItems[previous].style.borderColor = "";
+    }
+    function startPanel(stop) {
+      if (startedFlag != false) {
+        if (!player.canPurse(-lastNum)) {
+          alert("积分已经用完");
+          return 0;
+        }
+      }
+
+      startFlag = true;
+      stop += Math.random() * 1.8;
+      audioHelper.changeRate(audioStart, 1.25);
+      audioStart.play();
+      if (startedFlag == false) {
+        startedFlag = true;
+      } else {
+        player.purse(-lastNum);
+      }
+      let index = Math.floor(Math.random() * 22);
+      let progress = 0;
+      let intervalTime = 30;
+      let doFlag = 6;
+      let panelShowLightInterval = setInterval(() => {
+        progress += intervalTime;
+        if (progress / (stop * 1000.0) > 0.5) {
+          audioHelper.changeRate(audioStart, 1);
+          doFlag += 1;
+        }
+        if (doFlag % 6 == 0) {
+          pannelShowLight(index);
+          index += 1;
+        }
+      }, intervalTime);
+      setTimeout(() => {
+        clearInterval(panelShowLightInterval);
+        audioHelper.pauseAndReset(audioStart);
+        getResult((index - 1) % 22);
+      }, stop * 1000);
+    }
+    function fillPanelItems() {
+      let prefix = "order-";
+      for (let order = 0; order < panelLightNum; order++) {
+        panelItems.push(document.querySelector(`[${prefix + order}]`));
+      }
+    }
+    function fillOptions() {
+      options = document.querySelectorAll("div.button div img");
+      options.forEach((val, index) => {
+        val.onclick = () => {
+          stakes[index].stake(1);
+        }
+      });
+    }
+    function initPlayer() {
+      player = {
+        "score": 100, scoreLeft: document.querySelector(".scoreLeft")
+        , scoreRight: document.querySelector(".scoreRight")
+        , scoreChange: function (num) {
+          this.scoreLeft.innerText = num;
+          this.purse(num);
+        }, "canPurse": function (num) {
+          if (this.score + num >= 0) {
+            return true;
+          } else {
+            return false;
+          }
+        }, purse: function (num) {
+          if (this.score + num >= 0) {
+            this.score += num;
+            this.scoreRight.innerText = this.score;
+            return true;
+          } else {
+            return false;
+          }
+        }
+      };
+      player.scoreChange(0);
+    }
+    function initStakes() {
+      for (let i = 1; i < 9; i++)
+        stakes.push({
+          "showItem": document.querySelector(`div.row.stake > div:nth-child(${i})`),
+          "num": 0, "stake": function (n) {
+            if (!startFlag) {
+              if (n > 0 && startedFlag) {
+                resetStakes();
+              }
+              if (!player.canPurse(-n)) {
+                return 0;
+              }
+              this.num += n;
+              if (n >= 0) {
+                player.purse(-n);
+                lastNum += n;
+              } else {
+                if (!startedFlag) {
+                  player.purse(-n);
+                }
+              }
+              this.showItem.innerText = this.num;
+            }
+          }
+        });
+    }
+    function resetStakes() {
+      if (!startFlag) {
+        stakes.forEach((val) => {
+          val.stake(-val.num);
+        });
+        lastNum = 0;
+        startedFlag = false;
+      }
+
+    }
+    function initSpecific() {
+      specificForPanelItem = [
+        { "name": "橘子", "multiply": 10, "correspond": stakes[6] },
+        { "name": "铃铛", "multiply": 10, "correspond": stakes[4] },
+        { "name": "好运大奖", "multiply": 25, "correspond": stakes[0] },
+        { "name": "超级大奖", "multiply": 50, "correspond": stakes[0] },
+        { "name": "苹果", "multiply": 5, "correspond": stakes[7] },
+        { "name": "苹果", "multiply": 2, "correspond": stakes[7] },
+        { "name": "柠檬", "multiply": 10, "correspond": stakes[5] },
+        { "name": "西瓜", "multiply": 10, "correspond": stakes[3] },
+        { "name": "西瓜", "multiply": 2, "correspond": stakes[3] },
+        { "name": "苹果", "multiply": 5, "correspond": stakes[7] },
+        { "name": "橘子", "multiply": 2, "correspond": stakes[6] },
+        { "name": "橘子", "multiply": 10, "correspond": stakes[6] },
+        { "name": "铃铛", "multiply": 10, "correspond": stakes[4] },
+        { "name": "双七", "multiply": 2, "correspond": stakes[1] },
+        { "name": "双七", "multiply": 20, "correspond": stakes[1] },
+        { "name": "苹果", "multiply": 5, "correspond": stakes[7] },
+        { "name": "柠檬", "multiply": 2, "correspond": stakes[5] },
+        { "name": "柠檬", "multiply": 10, "correspond": stakes[5] },
+        { "name": "双星", "multiply": 20, "correspond": stakes[2] },
+        { "name": "双星", "multiply": 2, "correspond": stakes[2] },
+        { "name": "苹果", "multiply": 5, "correspond": stakes[7] },
+        { "name": "铃铛", "multiply": 2, "correspond": stakes[4] },
+      ];
+
+    }
+    function getResult(panelIndex) {
+      let result = specificForPanelItem[panelIndex];
+      let prize = result.multiply * result.correspond.num;
+      player.scoreChange(prize);
+      startFlag = false;
+      audioResult.src = `https://fanyi.baidu.com/gettts?lan=zh&text=${result.name}&spd=5&source=web`;
+      audioResult.play();
+    }
+    function initAudio() {
+      audioResult = document.querySelector("body > audio.result");
+      audioStart = document.querySelector("body > audio.panel-start");
+      audioResult.playbackRate = 1.25;
+      audioStart.playbackRate = 1.25;
+    }
+    window.onload = () => {
+      initPlayer();
+      fillPanelItems();
+      startBtn = document.querySelector(".btn-success");
+      initStakes();
+      fillOptions();
+      initSpecific();
+      initAudio();
+    };
+  </script>
+</body>
+
+</html>
